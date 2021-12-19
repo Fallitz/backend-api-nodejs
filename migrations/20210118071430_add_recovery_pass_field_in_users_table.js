@@ -7,6 +7,6 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
     return knex.schema.alterTable('users', function(table) {
-        table.dropUnique('recovery_code') 
+        table.dropUnique('recovery_code');
      })
 };
