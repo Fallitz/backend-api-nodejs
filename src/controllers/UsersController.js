@@ -6,7 +6,7 @@ module.exports = {
 
     async index(req, res){
         const user_id =  req.params.id
-        const fields = ['id', 'email', 'fullname', 'birth', 'nickname', 'type', 'active','channel_id', 'created_at', 'updated_at']
+        const fields = ['id', 'email', 'fullname', 'birth', 'nickname', 'type', 'active', 'created_at', 'updated_at']
 
         if(user_id){
             const userModel = new User()
