@@ -2,24 +2,31 @@ require("dotenv").config();
 
 const express = require('express')
 var cors = require('cors')
+const helmet = require('helmet');
+const morgan = require('morgan');
 const bodyParser = require('body-parser')
 
 const jwt = require("jsonwebtoken");
 
-const app = express()
-const routes = require('./routes')
+const app = express();
+const routes = require('./routes');
+const appWs = require('./socket');
 
-const PORT = process.env.APP_PORT
-const APP_VERSION = process.env.APP_VERSION
+const PORT = process.env.APP_PORT;
+const APP_VERSION = process.env.APP_VERSION;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(helmet());
 
-app.use(express.json())
+app.use(express.json());
+app.use(morgan('dev'));
 
 app.use(`/api/${APP_VERSION}`, routes);
 
-app.listen(PORT, () => {
-    console.info(`Server Running on Port ${PORT}`)
+const server = app.listen(PORT, () => {
+    console.info(`Server Running on Port ${PORT}`);
 })
+
+appWs(server);
