@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const express = require('express')
+const express = require('express');
 
 const cors = require('cors');
 const helmet = require('helmet');
@@ -9,8 +9,8 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const app = express();
-const routes = require('./routes');
 const appWebSocket = require('./socket');
+const routes = require('./routes');
 
 const PORT = process.env.APP_PORT;
 const APP_VERSION = process.env.APP_VERSION;
