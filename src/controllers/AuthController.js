@@ -8,31 +8,30 @@ const Mail = require('../services/Mail')
 module.exports = {
     
     async auth(req, res){
-        const data = req.body
+        const data = req.body;
         UserAuthValidator.validate({...data}).then(async function (valid) 
             {
                 try 
                 {
-                    const modelUser = new Auth()
-                    const user = await modelUser.authenticate(data)
-                    const userId = { id: user.id, updated_at: user.updated_at}
+                    const modelUser = new Auth();
+                    const user = await modelUser.authenticate(data);
+                    const userId = { id: user.id, updated_at: user.updated_at};
                     if(user !== false){
-                        const accessToken = generateAccessToken(userId)
-                        const refreshToken = jwt.sign(userId, process.env.REFRESH_TOKEN_SECRET)
-                        await modelUser.refreshToken_Update(userId, refreshToken)
-                        console.log ("User authentication: ", req.ip)
-                        res.json({ auth: true, accessToken: accessToken, refreshToken: refreshToken })
+                        const accessToken = generateAccessToken(userId);
+                        const refreshToken = jwt.sign(userId, process.env.REFRESH_TOKEN_SECRET);
+                        await modelUser.refreshToken_Update(userId, refreshToken);
+                        res.json({ auth: true, accessToken: accessToken, refreshToken: refreshToken });
                     }else{
                         res.status(403).json({message: 'E-mail e/ou senha estão incorretos.'}) ;
                     }   
                 }   
                 catch (error) {
-                    res.status(500).json({ message: error.message })
+                    res.status(500).json({ message: error.message });
                 }
             }
         ).catch(function (err) 
         {
-            res.status(500).json({message: err.errors[0], field: err.path})
+            res.status(500).json({message: err.errors[0], field: err.path});
         });
     },
     
@@ -90,7 +89,7 @@ module.exports = {
     },
 
     async forgot(req, res){
-        const {email} = req.body
+        const {email} = req.body;
         try {
             const userModel = new User();
             const verifyEmail = await userModel.where({email}, ['email']);
@@ -131,16 +130,16 @@ function generateAccessToken(user) {
 async function generateAndSentPasswordRecovery(email){
     try {
         //generate recovery code
-        const code = uuidv4()
-        const userModel = new User()
+        const code = uuidv4();
+        const userModel = new User();
         //save code in db
-        await userModel.update({email}, {'recovery_code': code})
-        const user = await userModel.where({email}, ['fullname'])
+        await userModel.update({email}, {'recovery_code': code});
+        const user = await userModel.where({email}, ['fullname']);
         //sent email to user
         const mail = new Mail("DevTube <transational@devtube.io>", email,"Recuperação de Senha ", `Olá ${user[0].fullname}, clique <a href="http://localhost:3333/api/v1/auth/forgot?recovery_code=${code}&email=${email}" target="_blank">aqui</a> para refazer uma nova senha !`);
-        await mail.send()
-        return true
+        await mail.send();
+        return true;
     } catch (error) {
-        throw new Error(error.message)
+        throw new Error(error.message);
     }
 }
