@@ -1,9 +1,9 @@
-const Auth = require('../models/Auth')
-const User = require('../models/User')
-const jwt = require('jsonwebtoken')
-const UserAuthValidator = require('../Http/Validators/Auth/Auth')
+const Auth = require('../models/Auth');
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const UserAuthValidator = require('../Http/Validators/Auth/Auth');
 const { v4: uuidv4 } = require('uuid');
-const Mail = require('../services/Mail')
+const Mail = require('../services/Mail');
 
 module.exports = {
     
@@ -129,13 +129,10 @@ function generateAccessToken(user) {
 
 async function generateAndSentPasswordRecovery(email){
     try {
-        //generate recovery code
         const code = uuidv4();
         const userModel = new User();
-        //save code in db
         await userModel.update({email}, {'recovery_code': code});
         const user = await userModel.where({email}, ['fullname']);
-        //sent email to user
         const mail = new Mail("DevTube <transational@devtube.io>", email,"Recuperação de Senha ", `Olá ${user[0].fullname}, clique <a href="http://localhost:3333/api/v1/auth/forgot?recovery_code=${code}&email=${email}" target="_blank">aqui</a> para refazer uma nova senha !`);
         await mail.send();
         return true;

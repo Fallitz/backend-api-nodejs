@@ -1,7 +1,7 @@
-const knex = require('../config/database')
-const bcrypt = require('bcrypt')
-const Mail = require('../services/Mail')
-const Model = require('./Model')
+require("dotenv").config();
+const Model = require('./Model');
+const knex = require('../config/database');
+const Mail = require('../services/Mail');
 
 class User extends Model{
     
@@ -14,28 +14,19 @@ class User extends Model{
             const email = data.email.toLowerCase();
             const emailWasRegistered = await knex('users').where('email', email);
             if(emailWasRegistered.length > 0){
-                return false;
+                return {status: false, message: 'Email já registrado', field: 'email'};
             }else{
+                const id = this.createId("idUser "+email);
                 const password = await this.encriptPassword(data.password);
-                const userId = await knex('users').insert({...data, email, password});
-                const user = await knex('users').where('id', userId[0]).select(['nickname', 'email', 'fullname', 'birth']);
+                await knex('users').insert({...data, id, email, password});
+                const user = await knex('users').where('email', email).select(['id', 'nickname', 'email', 'fullname', 'birth', 'gender', 'avatar']);
                 //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
                 //await mail.send()
-                return user[0];
+                return {status: true, user: user[0]};
             }
         } catch (error) {
-            return error;
+            return {status: false, message: error.message};
         }
-    }
-
-    async comparePassword (plainTextPassword, dbPassword){
-        const match = await bcrypt.compare(`%3456$${plainTextPassword}&92@7`, dbPassword);
-        return match;
-    }
-
-    async encriptPassword (password){
-        const hash = await bcrypt.hashSync(`%3456$${password}&92@7`, 10);
-        return hash;
     }
 
     async find(email, password){
