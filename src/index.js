@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const fs = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
 
@@ -12,8 +13,14 @@ app.use(bodyParser.json());
 
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(helmet());
-app.use(morgan('dev'));
+
 app.use(express.json());
+
+//LOGGING
+let data = new Date();
+// let accessLogStream = fs.createWriteStream('./log/' + data.getDate() + data.getMonth() + data.getFullYear() + '.log', {flags: 'a'});
+app.use(morgan('common', {skip: function(req, res){return res.statusCode < 400 }}));
+app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data.getDate() + data.getMonth() + data.getFullYear() + '.log', {flags: 'a'})}));
 
 const routes = require('./routes');
 const APP_VERSION = process.env.APP_VERSION;
@@ -25,4 +32,5 @@ const server = app.listen(PORT, () => {
 })
 
 const appWebSocket = require('./socket');
+const { noUnknown } = require("./models/util/http/validators/user");
 appWebSocket(server);
