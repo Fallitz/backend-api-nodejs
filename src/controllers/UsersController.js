@@ -1,5 +1,5 @@
-const User = require('../models/User');
-const UserStoreValidator = require('../Http/Validators/User/Store');
+const User = require('../models/user');
+const UserStoreValidator = require('../models/util/http/validators/user');
 
 module.exports = {
 
