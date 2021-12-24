@@ -37,27 +37,6 @@ module.exports = {
         });
     },
     
-    async refreshToken(req, res){
-        try{
-            const modelUser = new Auth();
-            const refreshToken = req.body.refreshToken;
-            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, function(err, user){
-                if (err) return res.sendStatus(403);
-                req.user = user;
-            })
-            const dataId = {id: req.user.id, updated_at: req.user.updated_at, token: refreshToken};
-            const result = await modelUser.refreshToken(dataId);
-            if (result){
-                const accessToken = generateAccessToken({ id: req.user.id, updated_at: req.user.updated_at });
-                res.json({ accessToken: accessToken });
-            }else{
-                res.sendStatus(403);
-            }
-        }catch (error) {
-           res.sendStatus(500);
-        }
-    },
-    
     async login(req, res){
         const modelUser = new Auth();
         const data = req.user;
@@ -89,6 +68,27 @@ module.exports = {
            res.sendStatus(500);
         }
     },
+    
+    async refreshToken(req, res){
+        try{
+            const modelUser = new Auth();
+            const refreshToken = req.body.refreshToken;
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, function(err, user){
+                if (err) return res.sendStatus(403);
+                req.user = user;
+            })
+            const dataId = {id: req.user.id, updated_at: req.user.updated_at, token: refreshToken};
+            const result = await modelUser.refreshToken(dataId);
+            if (result){
+                const accessToken = generateAccessToken({ id: req.user.id, updated_at: req.user.updated_at });
+                res.json({ accessToken: accessToken });
+            }else{
+                res.sendStatus(403);
+            }
+        }catch (error) {
+           res.sendStatus(500);
+        }
+    },
 
     async forgot(req, res){
         const {email} = req.body;
@@ -106,6 +106,7 @@ module.exports = {
             
         }
     },
+
     async alterPassword(req, res){
         const {email, recovery_code, newPassword} = req.query;
         try {
