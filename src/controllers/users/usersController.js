@@ -1,4 +1,4 @@
-const User = require('../../models/user');
+const User = require('../../models/user/user');
 const UserStoreValidator = require('../../models/util/http/validators/user');
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
             try {
                 const user = new User(data);
                 try {
-                    const userRegistered = await user.store(data);
+                    const userRegistered = await user.create(data);
                    
                     if(userRegistered.status){
                         return res.status(201).json({message: 'Usuário criado com sucesso', data: userRegistered.user});

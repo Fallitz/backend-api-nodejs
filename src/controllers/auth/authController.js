@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const UserAuthValidator = require('../../models/util/http/validators/auth');
 const { v4: uuidv4 } = require('uuid');
 
-const Auth = require('../../models/auth');
-const User = require('../../models/user');
+const Auth = require('../../models/auth/auth');
+const User = require('../../models/user/user');
 const Mail = require('../../services/mail');
 
 module.exports = {

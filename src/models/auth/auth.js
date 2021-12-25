@@ -1,6 +1,6 @@
-const knex = require('../config/database')
+const knex = require('../../config/database')
 const bcrypt = require('bcrypt')
-const Model = require('./Model')
+const Model = require('../Model')
 
 class Auth extends Model{
 
