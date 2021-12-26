@@ -14,6 +14,8 @@ module.exports = {
             {
                 try 
                 {
+                    //VERIFICAR SE O USUARIO ESTA ATIVO AQUI
+
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
                     if(user){
@@ -54,14 +56,9 @@ module.exports = {
             const modelUser = new Auth();
             const refreshToken = req.body.refreshToken;
            
-            
-           //REAPROVEITAR ESSA VERIFICAÇÂO BOAS PRATICAS
-            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, function(err, user){
-                if (err) return res.sendStatus(403);
-                req.tokenData = user;
-            });
+            const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-            const dataId = {id:  req.tokenData.id, token: refreshToken};
+            const dataId = {id:  tokenRefreshVerified.id, token: refreshToken};
             const result = await modelUser.logout(dataId);
             if (result == true){
                 res.status(200).json({ auth: false, accessToken: null });
