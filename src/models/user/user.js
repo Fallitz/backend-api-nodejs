@@ -1,4 +1,3 @@
-require("dotenv").config();
 const Model = require('../Model');
 const knex = require('../../config/database');
 const Mail = require('../../services/Mail');

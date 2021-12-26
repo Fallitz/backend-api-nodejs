@@ -1,19 +1,14 @@
-const knex = require('../../config/database')
-const bcrypt = require('bcrypt')
-const Model = require('../Model')
+const knex = require('../../config/database');
+const Model = require('../Model');
+const util = require('../util/util');
 
 class Auth extends Model{
-
-    async comparePassword (plainTextPassword, dbPassword){
-        const match = await bcrypt.compare(`%3456$${plainTextPassword}&92@7`, dbPassword);
-        return match;
-    }
 
     async authenticate({email, password}) {
         const dbemail = await knex('users').where("email", email.toLowerCase());
         if (JSON.stringify(dbemail[0]) != undefined && JSON.stringify(dbemail[0]) != null){
             const dbpassword = dbemail[0].password;
-            const comparePassword = await this.comparePassword(password, dbpassword);
+            const comparePassword = await util.comparePassword(password, dbpassword);
             if(comparePassword === true){             
                 return ({id: dbemail[0].id, updated_at: dbemail[0].updated_at});
             }
