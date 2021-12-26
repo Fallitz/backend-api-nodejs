@@ -14,7 +14,7 @@ Router.delete('/users', AuthenticateToken, UsersController.delete);             
 //AUTH
 Router.post('/auth', AuthController.auth);                                                  //AUTHENTICATE USER
 Router.get('/login', AuthenticateToken , AuthController.login);                             //LOGIN USER
-Router.delete('/logout', AuthController.logout);                                            //LOGOUT USER
+Router.delete('/logout', AuthenticateToken, AuthController.logout);                         //LOGOUT USER
 Router.post('/refreshToken', AuthenticateToken, AuthController.refreshToken);               //REFRESH TOKEN
 Router.post('/auth/forgot' , AuthController.forgot);                                        //FORGOT PASSWORD
 Router.get('/auth/forgot' , AuthController.alterPassword);                                  //ALTER PASSWORD

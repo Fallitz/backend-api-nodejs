@@ -17,7 +17,7 @@ app.use(helmet());
 app.use(express.json());
 
 //LOGGING
-let data = new Date();
+var data = new Date();
 app.use(morgan('common', {skip: function(req, res){return res.statusCode < 400 }}));
 app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data.getUTCDate() + (data.getMonth() + 1) + data.getFullYear() + '.log', {flags: 'a'})}));
 

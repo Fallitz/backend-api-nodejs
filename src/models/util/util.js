@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const knex = require('../../config/database');
 const { v5: uuidv5 } = require('uuid');
 const bcrypt = require('bcrypt');
 const { expectCt } = require('helmet');

@@ -21,10 +21,8 @@ module.exports = {
                     if(user){
                         const code = uuidv4();
                         const userId = {id: user.id, code: code};
-
-                        const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET);
+                        const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
                         const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
-
                         res.json({ auth: true, accessToken: accessToken, refreshToken: refreshToken });
                     }else{
                         res.status(403).json({message: 'E-mail e/ou senha estão incorretos.'}) ;
@@ -43,7 +41,8 @@ module.exports = {
     async login(req, res){
         const modelUser = new Auth();
         const data = req.tokenData;
-        const user = await modelUser.login(data);
+        const token = req.headers['access-token'];
+        const user = await modelUser.login(data, token);
         if(user){
             res.json(user);
         }else{
@@ -54,13 +53,9 @@ module.exports = {
     async logout(req, res){
         try{
             const modelUser = new Auth();
-            const refreshToken = req.body.refreshToken;
-           
-            const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
-
-            const dataId = {id:  tokenRefreshVerified.id, token: refreshToken};
-            const result = await modelUser.logout(dataId);
-            if (result == true){
+            const token = req.headers['access-token'];
+            const result = await modelUser.logout(token);
+            if (result){
                 res.status(200).json({ auth: false, accessToken: null });
             }else{
                 res.sendStatus(403);
@@ -75,8 +70,13 @@ module.exports = {
             const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
             if(tokenRefreshVerified){
                 if (tokenRefreshVerified.code == req.tokenData.code){
+                    const modelUser = new Auth();
+                    const tokenForLogout = req.headers['access-token'];
+                    const result = await modelUser.logout(tokenForLogout);
                     const accessToken = await util.generateToken({ id: req.tokenData.id, code: tokenRefreshVerified.code}, process.env.ACCESS_TOKEN_SECRET, '15m');
-                    res.status(200).json({ accessToken: accessToken });
+                    if (result){
+                        res.status(200).json({ accessToken: accessToken });
+                    }
                 }else{
                     res.sendStatus(403);
                 }
