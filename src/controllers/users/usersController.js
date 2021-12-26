@@ -65,7 +65,7 @@ module.exports = {
             }
 
             // Get user logged id e select your type (user, admin ...)
-            const userAuthenticated = req.user.id;
+            const userAuthenticated = req.tokenData.id;
             const getType = await userModel.where({id: userAuthenticated}, ['type']);
             // Cheks if the user logged is admin or if the user id that will be deleted is equal to logged
             if(getType == 'admin' || userAuthenticated == user_id){
@@ -91,7 +91,7 @@ module.exports = {
             const {user_id} = req.body;
 
             //Get user logged id e select your type (user, admin ...)
-            const userAuthenticated = req.user.id;
+            const userAuthenticated = req.tokenData.id;
             const getType = await userModel.where({id: userAuthenticated}, ['type']);
 
             // Cheks if the user logged is admin or if the user id that will be deleted is equal to logged

@@ -18,9 +18,8 @@ app.use(express.json());
 
 //LOGGING
 let data = new Date();
-// let accessLogStream = fs.createWriteStream('./log/' + data.getDate() + data.getMonth() + data.getFullYear() + '.log', {flags: 'a'});
 app.use(morgan('common', {skip: function(req, res){return res.statusCode < 400 }}));
-app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data.getUTCDate() + data.getMonth() + data.getFullYear() + '.log', {flags: 'a'})}));
+app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data.getUTCDate() + (data.getMonth() + 1) + data.getFullYear() + '.log', {flags: 'a'})}));
 
 const routes = require('./routes');
 const APP_VERSION = process.env.APP_VERSION;

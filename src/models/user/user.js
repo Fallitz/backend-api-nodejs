@@ -19,7 +19,7 @@ class User extends Model{
                 const id = await util.createId("idUser "+email);
                 const password = await util.encriptPassword(data.password);
                 await knex('users').insert({...data, id, email, password});
-                const user = await knex('users').where('email', email).select(['id', 'nickname', 'email', 'fullname', 'birth', 'gender', 'avatar']);
+                const user = await knex('users').where('email', email).select(['email']);
                 //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
                 //await mail.send()
                 return {status: true, user: user[0]};

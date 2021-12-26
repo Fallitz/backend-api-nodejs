@@ -1,7 +1,6 @@
-const jwt = require('jsonwebtoken');
-
 const UserAuthValidator = require('../../models/util/http/validators/auth');
 const { v4: uuidv4 } = require('uuid');
+const util = require('../../models/util/util');
 
 const Auth = require('../../models/auth/auth');
 const User = require('../../models/user/user');
@@ -17,15 +16,17 @@ module.exports = {
                 {
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
-                    const userId = { id: user.id, updated_at: user.updated_at};
-                    if(user !== false){
-                        const accessToken = generateAccessToken(userId);
-                        const refreshToken = jwt.sign(userId, process.env.REFRESH_TOKEN_SECRET);
-                        await modelUser.refreshToken_Update(userId, refreshToken);
+                    if(user){
+                        const code = uuidv4();
+                        const userId = {id: user.id, code: code};
+
+                        const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET);
+                        const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
+
                         res.json({ auth: true, accessToken: accessToken, refreshToken: refreshToken });
                     }else{
                         res.status(403).json({message: 'E-mail e/ou senha estão incorretos.'}) ;
-                    }   
+                    }
                 }   
                 catch (error) {
                     res.status(500).json({ message: error.message });
@@ -39,9 +40,9 @@ module.exports = {
     
     async login(req, res){
         const modelUser = new Auth();
-        const data = req.user;
+        const data = req.tokenData;
         const user = await modelUser.login(data);
-        if(user != false){
+        if(user){
             res.json(user);
         }else{
             res.sendStatus(403);
@@ -52,14 +53,17 @@ module.exports = {
         try{
             const modelUser = new Auth();
             const refreshToken = req.body.refreshToken;
+           
+            
+           //REAPROVEITAR ESSA VERIFICAÇÂO BOAS PRATICAS
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, function(err, user){
                 if (err) return res.sendStatus(403);
-                req.user = user;
-            })
-            const dataId = {id:  req.user.id, token: refreshToken};
+                req.tokenData = user;
+            });
+
+            const dataId = {id:  req.tokenData.id, token: refreshToken};
             const result = await modelUser.logout(dataId);
             if (result == true){
-                console.log ("User Logout: ", req.ip);
                 res.status(200).json({ auth: false, accessToken: null });
             }else{
                 res.sendStatus(403);
@@ -70,18 +74,15 @@ module.exports = {
     },
     
     async refreshToken(req, res){
-        try{
-            const modelUser = new Auth();
-            const refreshToken = req.body.refreshToken;
-            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, function(err, user){
-                if (err) return res.sendStatus(403);
-                req.user = user;
-            })
-            const dataId = {id: req.user.id, updated_at: req.user.updated_at, token: refreshToken};
-            const result = await modelUser.refreshToken(dataId);
-            if (result){
-                const accessToken = generateAccessToken({ id: req.user.id, updated_at: req.user.updated_at });
-                res.json({ accessToken: accessToken });
+        try{            
+            const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            if(tokenRefreshVerified){
+                if (tokenRefreshVerified.code == req.tokenData.code){
+                    const accessToken = await util.generateToken({ id: req.tokenData.id, code: tokenRefreshVerified.code}, process.env.ACCESS_TOKEN_SECRET, '15m');
+                    res.status(200).json({ accessToken: accessToken });
+                }else{
+                    res.sendStatus(403);
+                }
             }else{
                 res.sendStatus(403);
             }
@@ -97,9 +98,9 @@ module.exports = {
             const verifyEmail = await userModel.where({email}, ['email']);
             if(verifyEmail.length >= 1){
                 generateAndSentPasswordRecovery(email);
-                return res.status(200).json({message: 'Verifique seu E-Mail'});
+                return res.status(200).json({message: 'Verifique seu e-mail'});
             }else{
-                return res.status(500).json({message: 'E-Mail não encontrado', field: 'email'});
+                return res.status(500).json({message: 'E-mail não encontrado', field: 'email'});
             }
         } catch (error) {
             return res.status(500).json({message: error.message});
@@ -123,11 +124,6 @@ module.exports = {
             return res.status(500).json({message: error.message});
         }
     },
-}
-
-function generateAccessToken(user) {
-   // return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' }); //Produção
-   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET); //Desenvolvimento
 }
 
 async function generateAndSentPasswordRecovery(email){
