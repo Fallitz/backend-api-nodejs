@@ -1,21 +1,17 @@
-const UserAuthValidator = require('../../models/util/http/validators/auth');
+const AuthValidator = require('../../models/util/http/validators/auth');
 const { v4: uuidv4 } = require('uuid');
 const util = require('../../models/util/util');
-
 const Auth = require('../../models/auth/auth');
-const User = require('../../models/user/user');
 const Mail = require('../../services/mail');
 
 module.exports = {
     
     async auth(req, res){
         const data = req.body;
-        UserAuthValidator.validate({...data}).then(async function (valid) 
+        AuthValidator.auth.validate({...data}).then(async function (valid) 
             {
                 try 
                 {
-                    //VERIFICAR SE O USUARIO ESTA ATIVO AQUI
-
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
                     if(user){
@@ -23,30 +19,33 @@ module.exports = {
                         const userId = {id: user.id, code: code};
                         const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
                         const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
-                        res.json({ auth: true, accessToken: accessToken, refreshToken: refreshToken });
+                        res.json({status: true, accessToken: accessToken, refreshToken: refreshToken });
                     }else{
-                        res.status(403).json({message: 'E-mail e/ou senha estão incorretos.'}) ;
+                        res.status(403).json({status: false, message: 'E-mail e/ou senha estão incorretos.'}) ;
                     }
                 }   
                 catch (error) {
-                    res.status(500).json({ message: error.message });
+                    res.status(500).json({status: false, message: error.message });
                 }
             }
         ).catch(function (err) 
         {
-            res.status(500).json({message: err.errors[0], field: err.path});
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
     
     async login(req, res){
-        const modelUser = new Auth();
-        const data = req.tokenData;
-        const token = req.headers['access-token'];
-        const user = await modelUser.login(data, token);
-        if(user){
-            res.json(user);
-        }else{
-            res.sendStatus(403);
+        try {
+            const data = req.tokenData;
+            const modelUser = new Auth();
+            const user = await modelUser.login(data);
+            if(user){
+                res.status(200).json(user);
+            }else{
+                res.sendStatus(403);
+            }
+        } catch (error) {
+            res.status(500).json({message: error.message});
         }
     },
 
@@ -88,7 +87,7 @@ module.exports = {
         }
     },
 
-    async forgot(req, res){
+   /* async forgot(req, res){
         const {email} = req.body;
         try {
             const userModel = new User();
@@ -120,9 +119,10 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({message: error.message});
         }
-    },
+    },*/
 }
 
+/*
 async function generateAndSentPasswordRecovery(email){
     try {
         const code = uuidv4();
@@ -135,4 +135,4 @@ async function generateAndSentPasswordRecovery(email){
     } catch (error) {
         throw new Error(error.message);
     }
-}
+}*/

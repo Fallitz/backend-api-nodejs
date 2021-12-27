@@ -1,55 +1,55 @@
 const User = require('../../models/user/user');
-const UserStoreValidator = require('../../models/util/http/validators/user');
+const UserValidator = require('../../models/util/http/validators/user');
 
 module.exports = {
 
     async create(req, res){
         const data = req.body;
-        UserStoreValidator.validate({...data}).then(async function (valid) {
+        UserValidator.create.validate({...data}).then(async function (valid) {
             try {
                 const user = new User(data);
                 try {
                     const userRegistered = await user.create(data);
                    
                     if(userRegistered.status){
-                        return res.status(201).json({message: 'Usuário criado com sucesso', data: userRegistered.user});
+                        return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: userRegistered.user});
                     }else{
-                        return res.status(403).json({message: userRegistered.message, field: userRegistered.field});
+                        return res.status(403).json({status: false, message: userRegistered.message, field: userRegistered.field});
                     }
                 } catch (error) {
-                    return res.status(400).json({message: userRegistered.message});
+                    return res.status(400).json({status: false, message: userRegistered.message});
                 }
             } catch (error) {
-                res.status(500).json({message: error.message});
+                res.status(500).json({status: false, message: error.message});
             }
         }).catch(function (err) {
-            res.status(500).json({message: err.errors[0], field: err.path});
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
 
-    async get(req, res){
+    async getUser(req, res){
         const user_id =  req.params.id;
-        const fields = ['id', 'email', 'fullname', 'birth', 'nickname', 'type', 'active', 'created_at', 'updated_at'];
-
+        
         if(user_id){
-            const userModel = new User();
+            
             try {
-                const user = await userModel.where({id : user_id}, fields);
-                return res.status('200').json({data: {user: user[0]}});
+                if (user_id == req.tokenData.id){
+                    const userModel = new User();
+                    const user = await userModel.getUser(user_id);
+                    return res.status('200').json({status: true, data: {user: user[0]}});
+                }
+                else{ 
+                    res.status(500).json({status: false, message: 'Usuário não autorizado.'});
+                }
             } catch (error) {
-                res.status(500).json({message: 'Usuário não encontrado.'});
+                throw error;
             }   
         }else{
-            try {
-                const userModel = new User();
-                const getAllUsers =  await userModel.where({}, fields);
-                return res.status(200).json(getAllUsers);
-            } catch (error) {
-                return res.status(500).json({message: error.message});
-            }
+            res.status(500).json({status: false, message: 'Id de usuário não encontrado.'});
         }
     },
-
+    
+    /*
     async update(req, res){
         try {
             const userModel = new User();
@@ -85,6 +85,7 @@ module.exports = {
         } 
     },
 
+  
     async delete(req, res){
         try {
             const userModel = new User();
@@ -110,16 +111,17 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({message: error.message});
         } 
-    },
+    },*/
 
 }
 
+/*
 async function updateUserEmail(user_id, email, res){
     //check if email has been registered
     const userModel = new User();
     const emailRegistred =  await userModel.where({email}, ['email']);
     if(emailRegistred.length >= 1){
-        return res.status(500).json({message: 'E-Mail já registrado'});
+        return res.status(500).json({message: 'E-mail já registrado'});
     }else{
         await userModel.update({id: user_id}, {email});
         return true;
@@ -134,6 +136,7 @@ async function updateUserNickname(user_id, nickname, res){
         return res.status(500).json({message: 'Nickname já registrado'});
     }else{
         await userModel.update({id: user_id}, {nickname});
-         return true;
+        return true;
     }
 }
+    */

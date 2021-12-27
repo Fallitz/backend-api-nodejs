@@ -7,8 +7,8 @@ class Auth extends Model{
 
     async authenticate({email, password}) {
         try{
-            const dbemail = await knex('users').where("email", email.toLowerCase()).select('id', 'password');
-            if (JSON.stringify(dbemail[0]) != undefined && JSON.stringify(dbemail[0]) != null){
+            const dbemail = await knex('users').where("email", email.toLowerCase()).select('id', 'password', 'active');
+            if (dbemail.length > 0 && dbemail[0].active == 1) {
                 const dbpassword = dbemail[0].password;
                 const comparePassword = await util.comparePassword(password, dbpassword);
                 if(comparePassword === true){            
@@ -26,10 +26,10 @@ class Auth extends Model{
          
     }
 
-    async login({id}){
-        const dbemail = await knex('users').where("id", id).select('id','email', 'fullname', 'birth', 'nickname', 'type', 'updated_at');
-        if(JSON.stringify(id) === JSON.stringify(dbemail[0].id)){
-            return dbemail[0];
+    async login(data){
+        const result = await knex('users').where("id", data.id).select('id','email', 'fullname', 'birth', 'nickname', 'type', 'updated_at');
+        if(result.length > 0){
+            return result[0];
         }else{
             return false;
         }  
