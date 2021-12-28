@@ -41,7 +41,13 @@ class User extends Model{
     {
         try {
             const user = await knex('users').where('id', id).select(['id', 'email', 'fullname', 'birth', 'nickname', 'lastAcess_at']);
-            return {status: true, message: user[0]};
+            if(user.length > 0){
+             // await knex('users').where('id', user[0].id).insert('lastAcess_at', knex.fn.now());
+                return {status: true, message: user[0]};
+            }else{
+                return {status: false, message: 'Usuário não encontrado'};
+            }
+            
         } catch (error) {
             return {status: false, message: error.message};
         }
