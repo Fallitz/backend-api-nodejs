@@ -34,20 +34,20 @@ module.exports = {
         });
     },
     
-    async login(req, res){
+    /*async login(req, res){
         try {
             const data = req.tokenData;
             const modelUser = new Auth();
             const user = await modelUser.login(data);
             if(user.status){
-                res.status(200).json(user.message);
+                res.status(200).json({status: true, data: user.message});
             }else{
                 res.sendStatus(403);
             }
         } catch (error) {
             res.status(500).json({message: error.message});
         }
-    },
+    },*/
 
     async logout(req, res){
         try{
@@ -72,7 +72,7 @@ module.exports = {
                     const modelUser = new Auth();
                     const tokenForLogout = req.headers['access-token'];
                     const result = await modelUser.logout(tokenForLogout);
-                    const accessToken = await util.generateToken({ id: req.tokenData.id, code: tokenRefreshVerified.code}, process.env.ACCESS_TOKEN_SECRET, '15m');
+                    const accessToken = await util.generateToken({id:req.tokenData.id, code:tokenRefreshVerified.code}, process.env.ACCESS_TOKEN_SECRET, '15m');
                     if (result.status){
                         res.status(200).json({ accessToken: accessToken });
                     }

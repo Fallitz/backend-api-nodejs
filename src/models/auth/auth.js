@@ -25,7 +25,7 @@ class Auth extends Model{
         }
     }
 
-    async login(data){
+    /*async login(data){
         try{
             const result = await knex('users').where("id", data.id).select('id','email', 'fullname', 'birth', 'nickname', 'lastAcess_at');
             if(result.length > 0){
@@ -37,7 +37,7 @@ class Auth extends Model{
             return {status: false, message: error.message};
         }
           
-    }
+    }*/
     
     async logout(token){
         try{
