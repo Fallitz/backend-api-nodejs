@@ -1,6 +1,6 @@
 const Model = require('../Model');
 const knex = require('../../config/database');
-const util = require('../util/util');
+const util = require('../../modules/util/util');
 const { v4: uuidv4 } = require('uuid');
 const Mail = require('../../services/Mail');
 
@@ -19,14 +19,18 @@ class User extends Model{
             }else{
                 const id = await util.createId("idUser "+email);
                 const password = await util.encriptPassword(data.password);
-                const user = await knex('users').insert({...data, id, email, password}).then(() => {return knex ('users').where('email', email).select('email')});
+
+                const user = await knex('users').insert({...data, id, email, password}).then(() => {return knex ('users').where('email', email).select('id', 'email')});
+                                
+                const code = uuidv4();
+                const userId = {id: user[0].id, code: code};
+                const acessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
+                const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
+
                 //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
                 //await mail.send()
-                const code = uuidv4();
-                const userId = {id: user.id, code: code};
-                const token = util.generateToken()
 
-                return {status: true, user: user[0]};
+                return {status: true, user: user[0].email, acessToken, refreshToken};
             }
         } catch (error) {
             return {status: false, message: error.message};
@@ -36,12 +40,8 @@ class User extends Model{
     async getUser(id)
     {
         try {
-            const user = await knex('users').where(id, ['id', 'email', 'fullname', 'birth', 'nickname', 'type', 'active', 'created_at', 'updated_at']);
-            if (user[0].active == 1) {
-                return user[0];
-            }else{
-                return {status: false, message: 'Usuário não está ativo'};
-            }
+            const user = await knex('users').where('id', id).select(['id', 'email', 'fullname', 'birth', 'nickname', 'lastAcess_at']);
+            return {status: true, message: user[0]};
         } catch (error) {
             return {status: false, message: error.message};
         }

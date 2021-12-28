@@ -1,9 +1,8 @@
+require("dotenv").config();
 const jwt = require('jsonwebtoken');
-const knex = require('../../config/database');
 const { v5: uuidv5 } = require('uuid');
 const bcrypt = require('bcrypt');
 const { expectCt } = require('helmet');
-//const Model = require('./Model');
 
 module.exports = {
     async createId(email){

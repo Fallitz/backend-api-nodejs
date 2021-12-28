@@ -1,22 +1,22 @@
-const AuthValidator = require('../../models/util/http/validators/auth');
-const { v4: uuidv4 } = require('uuid');
-const util = require('../../models/util/util');
+const AuthValidator = require('../../modules/http/validators/auth');
 const Auth = require('../../models/auth/auth');
+const util = require('../../modules/util/util');
+const { v4: uuidv4 } = require('uuid');
 const Mail = require('../../services/mail');
 
 module.exports = {
     
     async auth(req, res){
         const data = req.body;
-        AuthValidator.auth.validate({...data}).then(async function (valid) 
+        AuthValidator.auth.validate({...data}).then(async function (valid)
             {
                 try 
                 {
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
-                    if(user){
+                    if(user.status){
                         const code = uuidv4();
-                        const userId = {id: user.id, code: code};
+                        const userId = {id: user.message.id, code: code};
                         const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
                         const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
                         res.json({status: true, accessToken: accessToken, refreshToken: refreshToken });
@@ -39,8 +39,8 @@ module.exports = {
             const data = req.tokenData;
             const modelUser = new Auth();
             const user = await modelUser.login(data);
-            if(user){
-                res.status(200).json(user);
+            if(user.status){
+                res.status(200).json(user.message);
             }else{
                 res.sendStatus(403);
             }
@@ -54,7 +54,7 @@ module.exports = {
             const modelUser = new Auth();
             const token = req.headers['access-token'];
             const result = await modelUser.logout(token);
-            if (result){
+            if (result.status){
                 res.status(200).json({ auth: false, accessToken: null });
             }else{
                 res.sendStatus(403);
@@ -73,7 +73,7 @@ module.exports = {
                     const tokenForLogout = req.headers['access-token'];
                     const result = await modelUser.logout(tokenForLogout);
                     const accessToken = await util.generateToken({ id: req.tokenData.id, code: tokenRefreshVerified.code}, process.env.ACCESS_TOKEN_SECRET, '15m');
-                    if (result){
+                    if (result.status){
                         res.status(200).json({ accessToken: accessToken });
                     }
                 }else{

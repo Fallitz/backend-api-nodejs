@@ -1,5 +1,5 @@
+const UserValidator = require('../../modules/http/validators/user');
 const User = require('../../models/user/user');
-const UserValidator = require('../../models/util/http/validators/user');
 
 module.exports = {
 
@@ -10,9 +10,8 @@ module.exports = {
                 const user = new User(data);
                 try {
                     const userRegistered = await user.create(data);
-                   
                     if(userRegistered.status){
-                        return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: userRegistered.user});
+                        return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});
                     }else{
                         return res.status(403).json({status: false, message: userRegistered.message, field: userRegistered.field});
                     }
@@ -29,14 +28,16 @@ module.exports = {
 
     async getUser(req, res){
         const user_id =  req.params.id;
-        
         if(user_id){
-            
             try {
                 if (user_id == req.tokenData.id){
                     const userModel = new User();
                     const user = await userModel.getUser(user_id);
-                    return res.status('200').json({status: true, data: {user: user[0]}});
+                    if(user.status){
+                        return res.status('200').json({status: true, data: user.message});
+                    }else{
+                        return res.status('403').json({status: false, message: user.message});
+                    }
                 }
                 else{ 
                     res.status(500).json({status: false, message: 'Usuário não autorizado.'});

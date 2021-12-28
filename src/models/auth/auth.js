@@ -1,6 +1,6 @@
 const knex = require('../../config/database');
 const Model = require('../Model');
-const util = require('../util/util');
+const util = require('../../modules/util/util');
 var  timexe  =  require ( 'timexe' ) ;
 
 class Auth extends Model{
@@ -12,35 +12,43 @@ class Auth extends Model{
                 const dbpassword = dbemail[0].password;
                 const comparePassword = await util.comparePassword(password, dbpassword);
                 if(comparePassword === true){            
-                    return ({id: dbemail[0].id});
+                    return ({status: true, message: {id: dbemail[0].id}});
                 }
                 else{
-                    return false;
+                    return {status: false};
                 }
             } else{
-                return false;
+                return {status: false};
             }  
         }catch(error){
-            return false;
+            return {status: false};
         }
-         
     }
 
     async login(data){
-        const result = await knex('users').where("id", data.id).select('id','email', 'fullname', 'birth', 'nickname', 'type', 'updated_at');
-        if(result.length > 0){
-            return result[0];
-        }else{
-            return false;
-        }  
+        try{
+            const result = await knex('users').where("id", data.id).select('id','email', 'fullname', 'birth', 'nickname', 'lastAcess_at');
+            if(result.length > 0){
+                return {status: true, message: result[0]};
+            }else{
+                return {status: false, message: 'Usuário não encontrado'};
+            }
+        }catch(error){
+            return {status: false, message: error.message};
+        }
+          
     }
     
     async logout(token){
-        const tokenInsert = await knex('tokens').insert({token, created_at: knex.fn.now()});  
-        if(tokenInsert.length > 0 || tokenInsert > 0){         
-            return true;
-        }else{
-            return false;
+        try{
+            const tokenInsert = await knex('tokens').insert({token, created_at: knex.fn.now()});  
+            if(tokenInsert.length > 0 || tokenInsert > 0){         
+                return {status: true};
+            }else{
+                return {status: false, message: 'Erro ao deslogar'};
+            }
+        }catch(error){
+            return {status: false, message: error.message};
         }
     }
 

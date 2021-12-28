@@ -16,6 +16,7 @@ exports.up = function(knex) {
             table.json('avatar');
             table.timestamp('created_at').defaultTo(knex.fn.now());
             table.timestamp('updated_at').defaultTo(knex.fn.now());
+            table.timestamp('lastAcess_at').defaultTo(knex.fn.now());
         })
 };
 
