@@ -27,27 +27,20 @@ module.exports = {
     },
 
     async getUser(req, res){
-        const user_id =  req.params.id;
-        if(user_id){
-            try {
-                if (user_id == req.tokenData.id){
-                    const userModel = new User();
-                    const user = await userModel.getUser(user_id);
-                    if(user.status){
-                        return res.status('200').json({status: true, data: user.message});
-                    }else{
-                        return res.status('403').json({status: false, message: user.message});
-                    }
-                }
-                else{ 
-                    res.status(500).json({status: false, message: 'Usuário não autorizado.'});
-                }
-            } catch (error) {
-                throw error;
-            }   
-        }else{
-            res.status(500).json({status: false, message: 'Id de usuário não encontrado.'});
-        }
+      
+        try {
+            const userModel = new User();
+            const user = await userModel.getUser(req.tokenData.id);
+            if(user.status){
+                return res.status('200').json({status: true, data: user.message});
+            }else{
+                return res.status('403').json({status: false, message: user.message});
+            }
+            
+        } catch (error) {
+            throw error;
+        }   
+       
     },
     
     /*
