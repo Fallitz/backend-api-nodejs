@@ -2,10 +2,10 @@
 exports.up = function(knex) {
     return knex.schema
         .createTable('users', function (table) {
-            table.string('id', 255).notNullable();
-            table.string('email', 255).notNullable();
-            table.string('password', 255).notNullable();
-            table.string('fullname', 255).notNullable();
+            table.uuid('id').notNullable();
+            table.string('email', 50).notNullable();
+            table.string('password', 80).notNullable();
+            table.string('fullname', 80).notNullable();
             table.string('birth').notNullable();
             table.string('nickname', 25).notNullable();
             table.enu('type', ['Comprador', 'Vendedor', 'Entregador']).notNullable();

@@ -7,18 +7,15 @@ async create(req, res){
         const data = req.body;
         sellerValidator.create.validate({...data}).then(async function (valid) {
             try {
-                const user = new Seller(data);
-                try {
-                    const userRegistered = await user.create(...data, req.tokenData.id);
-                    if(userRegistered.status){
-                        return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});
-                    }else{
-                        return res.status(403).json({status: false, message: userRegistered.message, field: userRegistered.field});
-                    }
-                } catch (error) {
-                    return res.status(400).json({status: false, message: userRegistered.message});
-                }
+                const seller = new Seller();
+                const sellerRegistered = await seller.create({...data, ownerId: req.tokenData.id});
+                if(sellerRegistered.status){
+                    return res.status(201).json({status: true, message: 'Loja criada com sucesso', data: {store: sellerRegistered.data}});
+                }else{
+                    return res.status(403).json({status: false, message: sellerRegistered.message, field: sellerRegistered.field});
+                }             
             } catch (error) {
+                console.log(error);
                 res.status(500).json({status: false, message: error.message});
             }
         }).catch(function (err) {

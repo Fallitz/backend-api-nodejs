@@ -5,9 +5,9 @@ module.exports = {
 
     async create(req, res){
         const data = req.body;
-        UserValidator.create.validate({...data}).then(async function (valid) {
+        UserValidator.create.validate({...data}).then(async function () {
             try {
-                const user = new User(data);
+                const user = new User();
                 const userRegistered = await user.create(data);
                 if(userRegistered.status){
                     return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});

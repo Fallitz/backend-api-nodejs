@@ -17,7 +17,7 @@ class User extends Model{
             if(emailWasRegistered.length > 0){
                 return {status: false, message: 'Email já registrado', field: 'email'};
             }else{
-                const id = await util.createId("idUser "+email);
+                const id = await util.createId("idUser "+ email);
                 const password = await util.encriptPassword(data.password);
 
                 const user = await knex('users').insert({...data, id, email, password}).then(() => {return knex ('users').where('email', email).select('id', 'email')});
@@ -29,6 +29,9 @@ class User extends Model{
 
                 //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
                 //await mail.send()
+
+                //DESENVOLVIMENTO REMOVER APOS USO
+                //await knex('users').where('id', user[0].id).del();
 
                 return {status: true, user: user[0].email, acessToken, refreshToken};
             }

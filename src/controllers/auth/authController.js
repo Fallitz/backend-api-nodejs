@@ -15,8 +15,8 @@ module.exports = {
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
                     if(user.status){
-                        const code = uuidv4();
-                        const userId = {id: user.message.id, code: code};
+                        const idToken = uuidv4();
+                        const userId = {id: user.message.id, code: idToken};
                         const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
                         const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
                         res.json({status: true, accessToken: accessToken, refreshToken: refreshToken });

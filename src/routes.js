@@ -20,7 +20,6 @@ Router.post('/users/refreshToken', AuthenticateToken, AuthController.refreshToke
 //Router.post('/users/auth/forgot' , AuthController.forgot);                                        //FORGOT PASSWORD
 //Router.get('/users/auth/forgot' , AuthController.alterPassword);                                  //ALTER PASSWORD
 
-Router.post('/sellers/create', AuthenticateToken, SellersController.create);                  //CREATE SELLER
-
+Router.post('/sellers/create', AuthenticateToken, SellerController.create);                  //CREATE SELLER
 
 module.exports = Router

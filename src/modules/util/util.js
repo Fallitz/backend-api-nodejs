@@ -6,9 +6,9 @@ const bcrypt = require('bcrypt');
 const { expectCt } = require('helmet');
 
 module.exports = {
-    async createId(email){
-        const id = uuidv5(email, process.env.SECRET_TOKEN_FOR_ID_USER);
-        return String(id);
+    async createId(data){
+        const id = uuidv5(data, process.env.SECRET_TOKEN_FOR_ID);
+        return id;
     },
 
     async comparePassword (plainTextPassword, dbPassword){
@@ -39,7 +39,6 @@ module.exports = {
         }catch(error){
             return error(error.message);
         }
-        
     }
     
 }
