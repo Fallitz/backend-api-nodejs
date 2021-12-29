@@ -8,16 +8,13 @@ module.exports = {
         UserValidator.create.validate({...data}).then(async function (valid) {
             try {
                 const user = new User(data);
-                try {
-                    const userRegistered = await user.create(data);
-                    if(userRegistered.status){
-                        return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});
-                    }else{
-                        return res.status(403).json({status: false, message: userRegistered.message, field: userRegistered.field});
-                    }
-                } catch (error) {
-                    return res.status(400).json({status: false, message: userRegistered.message});
+                const userRegistered = await user.create(data);
+                if(userRegistered.status){
+                    return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});
+                }else{
+                    return res.status(403).json({status: false, message: userRegistered.message, field: userRegistered.field});
                 }
+             
             } catch (error) {
                 res.status(500).json({status: false, message: error.message});
             }

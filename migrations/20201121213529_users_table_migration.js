@@ -8,10 +8,10 @@ exports.up = function(knex) {
             table.string('fullname', 255).notNullable();
             table.string('birth').notNullable();
             table.string('nickname', 25).notNullable();
-            table.enu('type', ['user', 'admin', 'seller', 'deliveryman']).defaultTo('user').notNullable();
+            table.enu('type', ['Comprador', 'Vendedor', 'Entregador']).notNullable();
             table.boolean('active').defaultTo('true').notNullable();
             table.string('refresh_token');
-            table.string('gender').notNullable();
+            table.enu('gender', ['Não informar', 'Masculino', 'Feminino', 'Outro']).notNullable();
             table.json('address');
             table.json('avatar');
             table.timestamp('created_at').defaultTo(knex.fn.now());

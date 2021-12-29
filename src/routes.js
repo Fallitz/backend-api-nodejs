@@ -2,8 +2,9 @@ const express = require('express');
 const Router = express.Router();
 
 const AuthenticateToken = require('./middleware/authenticateToken');
-const UsersController = require('./controllers/users/usersController');
+const UsersController = require('./controllers/user/usersController');
 const AuthController = require('./controllers/auth/authController');
+const SellerController = require('./controllers/seller/sellersController');
 
 //USERS
 Router.post('/users/register', UsersController.create);                                              //REGISTER USER
@@ -18,6 +19,8 @@ Router.delete('/users/logout', AuthenticateToken, AuthController.logout);       
 Router.post('/users/refreshToken', AuthenticateToken, AuthController.refreshToken);               //REFRESH TOKEN
 //Router.post('/users/auth/forgot' , AuthController.forgot);                                        //FORGOT PASSWORD
 //Router.get('/users/auth/forgot' , AuthController.alterPassword);                                  //ALTER PASSWORD
+
+Router.post('/sellers/create', AuthenticateToken, SellersController.create);                  //CREATE SELLER
 
 
 module.exports = Router
