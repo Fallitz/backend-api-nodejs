@@ -22,7 +22,7 @@ const schema ={
         category: Validator.string().required(),
         acceptDeliver: Validator.boolean().required(),
         acceptWithdrawal: Validator.boolean().required(),
-        avatar: Validator.string().required(),
+        avatar: Validator.string(),
     }),
 } 
 
