@@ -10,7 +10,6 @@ class seller extends Model{
                 try {
                         const sellerWasRegistered = await knex('users').where('id', data.ownerId).select('id');
                         if(sellerWasRegistered.length > 0){
-                               
                                 const id = await util.createId("idSeller "+ sellerWasRegistered[0].id);
                                 const storeWasRegistered = await knex('sellers').where('id', id).select('id');
                                 if(storeWasRegistered.length > 0){
@@ -19,7 +18,6 @@ class seller extends Model{
                                         const ownerId = sellerWasRegistered[0].id;
                                         const address = data.address;
                                         delete data.address;
-
                                         const seller = await knex('sellers').insert({...data, ...address, id, ownerId}).then(() => {return knex ('sellers').where('id', id).select('name')});
                                         if(seller.length > 0){
                                                 return {status: true, data: seller[0]};
@@ -31,7 +29,7 @@ class seller extends Model{
                                 return {status: false, message: 'Vendedor não encontrado', field: 'ownerId'};
                         }
                 }catch (error) {
-                        return {status: false, message: error.message};
+                        return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
 }

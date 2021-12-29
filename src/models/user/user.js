@@ -19,24 +19,26 @@ class User extends Model{
             }else{
                 const id = await util.createId("idUser "+ email);
                 const password = await util.encriptPassword(data.password);
-
                 const user = await knex('users').insert({...data, id, email, password}).then(() => {return knex ('users').where('email', email).select('id', 'email')});
-                                
-                const code = uuidv4();
-                const userId = {id: user[0].id, code: code};
-                const acessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
-                const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
+                if(user.length > 0){
+                    const code = uuidv4();
+                    const userId = {id: user[0].id, code: code};
+                    const acessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
+                    const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
+                    
+                    //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
+                    //await mail.send()
 
-                //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
-                //await mail.send()
-
-                //DESENVOLVIMENTO REMOVER APOS USO
-                //await knex('users').where('id', user[0].id).del();
-
-                return {status: true, user: user[0].email, acessToken, refreshToken};
+                    //DESENVOLVIMENTO REMOVER APOS USO
+                    //await knex('users').where('id', user[0].id).del();
+                   
+                    return {status: true, user: user[0].email, acessToken, refreshToken};
+                }else{
+                    return {status: false, message: 'Usuário não foi cadastrado'};
+                }
             }
         } catch (error) {
-            return {status: false, message: error.message};
+            return {status: false, message: error.sqlMessage ?? error.message};
         }
     }
 
@@ -51,7 +53,7 @@ class User extends Model{
                 return {status: false, message: 'Usuário não encontrado'};
             }
         } catch (error) {
-            return {status: false, message: error.message};
+            return {status: false, message: error.sqlMessage ?? error.message};
         }
     }
 

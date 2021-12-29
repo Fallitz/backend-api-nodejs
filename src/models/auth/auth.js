@@ -21,7 +21,7 @@ class Auth extends Model{
                 return {status: false};
             }  
         }catch(error){
-            return {status: false};
+            return {status: false, message: error.sqlMessage ?? error.message};
         }
     }
 
@@ -34,7 +34,7 @@ class Auth extends Model{
                 return {status: false, message: 'Usuário não encontrado'};
             }
         }catch(error){
-            return {status: false, message: error.message};
+            return {status: false, message: error.sqlMessage ?? error.message};
         }
           
     }*/
@@ -48,7 +48,7 @@ class Auth extends Model{
                 return {status: false, message: 'Erro ao deslogar'};
             }
         }catch(error){
-            return {status: false, message: error.message};
+            return {status: false, message: error.sqlMessage ?? error.message};
         }
     }
 
