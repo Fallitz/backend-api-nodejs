@@ -8,8 +8,7 @@ module.exports = {
     
     async auth(req, res){
         const data = req.body;
-        AuthValidator.auth.validate({...data}).then(async function (valid)
-            {
+        AuthValidator.auth.validate({...data}).then(async function (){
                 try 
                 {
                     const modelUser = new Auth();
@@ -27,8 +26,7 @@ module.exports = {
                 catch (error) {
                     res.status(500).json({status: false, message: error.message });
                 }
-            }
-        ).catch(function (err) 
+        }).catch(function (err) 
         {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
@@ -66,7 +64,10 @@ module.exports = {
     
     async refreshToken(req, res){
         try{            
-            const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            const refreshToken = req.body.refreshToken;
+            console.log(refreshToken)
+            const tokenRefreshVerified = await util.verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            console.log(tokenRefreshVerified);
             if(tokenRefreshVerified){
                 if (tokenRefreshVerified.code == req.tokenData.code){
                     const modelUser = new Auth();
@@ -77,9 +78,11 @@ module.exports = {
                         res.status(200).json({ accessToken: accessToken });
                     }
                 }else{
+         
                     res.sendStatus(403);
                 }
             }else{
+                console.log("Token de refresh não confere.");
                 res.sendStatus(403);
             }
         }catch (error) {

@@ -4,9 +4,9 @@ const { get } = require('timexe');
 
 module.exports = {
 
-async create(req, res){
+    async create(req, res){
         const data = req.body;
-        sellerValidator.create.validate({...data}).then(async function (valid) {
+        sellerValidator.create.validate({...data}).then(async function () {
             try {
                 const seller = new Seller();
                 const sellerRegistered = await seller.create({...data, ownerId: req.tokenData.id});
@@ -24,11 +24,13 @@ async create(req, res){
         });
     },
     async getSeller(req, res){
-        const id = req.params.id;
-        sellerValidator.get.validate({id}).then(async function (valid) {
+
+        const id = req.params.id ?? req.tokenData.id;
+
+        sellerValidator.id.validate({id}).then(async function () {
             try {
                 const seller = new Seller();
-                const sellerFound = await seller.get(id);
+                const sellerFound = req.params.id ? await seller.getById(id) : await seller.get(id);
                 if(sellerFound.status){
                     return res.status(200).json({status: true, data: sellerFound.data});
                 }else{
@@ -41,5 +43,19 @@ async create(req, res){
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
+    },
+    async listSellers(req, res){
+        try {
+            const seller = new Seller();
+            const sellers = await seller.listSellers(req.query.limit, req.query.offset);
+            if(sellers.status){
+                return res.status(200).json({status: true, data: sellers.data});
+            }else{
+                return res.status(403).json({status: false, message: sellers.message});
+            }             
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({status: false, message: error.message});
+        }
     }
 }

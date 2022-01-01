@@ -24,20 +24,22 @@ module.exports = {
     },
 
     async getUser(req, res){
-      
-        try {
-            const userModel = new User();
-            const user = await userModel.getUser(req.tokenData.id);
-            if(user.status){
-                return res.status('200').json({status: true, data: user.message});
-            }else{
-                return res.status('403').json({status: false, message: user.message});
-            }
-            
-        } catch (error) {
-            throw error;
-        }   
-       
+        const id = req.tokenData.id;
+        UserValidator.id.validate({id}).then(async function () {
+            try {
+                const userModel = new User();
+                const user = await userModel.getUser(id);
+                if(user.status){
+                    return res.status('200').json({status: true, data: user.message});
+                }else{
+                    return res.status('403').json({status: false, message: user.message});
+                }
+            } catch (error) {
+                throw error;
+            }   
+        }).catch(function (err) {
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
+        });
     },
     
     /*

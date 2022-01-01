@@ -22,6 +22,9 @@ const schema ={
         cpfnumber: Validator.string().max(11),
         avatar: Validator.string()
     }),
+    id: Validator.object().shape({
+        id: Validator.string().required().min(36).max(36),
+    }),
 } 
 
 module.exports = schema

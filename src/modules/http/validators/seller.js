@@ -24,6 +24,9 @@ const schema ={
         acceptWithdrawal: Validator.boolean().required(),
         avatar: Validator.string(),
     }),
+    id: Validator.object().shape({
+        id: Validator.string().required().min(36).max(36),
+    }),
 } 
 
 module.exports = schema
