@@ -32,6 +32,18 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
+        async get (id){
+                try {
+                        const seller = await knex('sellers').where('id', id).select(['id', 'name', 'ownerId', 'address', 'created_at']);
+                        if(seller.length > 0){
+                                return {status: true, data: seller[0]};
+                        }else{
+                                return {status: false, message: 'Loja não encontrada'};
+                        }
+                } catch (error) {
+                        return {status: false, message: error.sqlMessage ?? error.message};
+                }
+        }
 }
 
 module.exports = seller;
