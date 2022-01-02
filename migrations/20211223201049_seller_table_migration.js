@@ -23,6 +23,8 @@ exports.up = function(knex) {
         table.boolean('acceptDeliver').defaultTo('false').notNullable();
         table.boolean('acceptWithdrawal').defaultTo('false').notNullable();
         table.mediumtext('avatar').notNullable();
+        table.string('rating', 5);
+        table.boolean('online').defaultTo('false').notNullable();
         table.boolean('active').defaultTo('true').notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
