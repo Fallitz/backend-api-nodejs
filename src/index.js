@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const fs = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
+const util = require('./modules/util/util');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,7 +18,7 @@ app.use(helmet());
 app.use(express.json());
 
 //LOGGING
-var data = (`${new Date().getDate()}`) + (`${(new Date().getMonth() + 1)}`) + (`${new Date().getFullYear()}`);
+var data = util.dateFormat(new Date().getDate(), new Date().getMonth() + 1, new Date().getFullYear());
 app.use(morgan('common', {skip: function(req, res){return res.statusCode < 400 }}));
 app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data + '.log', {flags: 'a'})}));
 
