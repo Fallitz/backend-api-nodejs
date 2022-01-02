@@ -47,7 +47,7 @@ module.exports = {
     async listSellers(req, res){
         try {
             const seller = new Seller();
-            const sellers = await seller.listSellers(req.query.limit, req.query.offset);
+            const sellers = await seller.listSellers(req.query.limit ?? 10, req.query.offset ?? 0);
             if(sellers.status){
                 return res.status(200).json({status: true, data: sellers.data});
             }else{

@@ -63,11 +63,8 @@ module.exports = {
     },
     
     async refreshToken(req, res){
-        try{            
-            const refreshToken = req.body.refreshToken;
-            console.log(refreshToken)
-            const tokenRefreshVerified = await util.verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-            console.log(tokenRefreshVerified);
+        try{
+            const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
             if(tokenRefreshVerified){
                 if (tokenRefreshVerified.code == req.tokenData.code){
                     const modelUser = new Auth();
@@ -78,11 +75,9 @@ module.exports = {
                         res.status(200).json({ accessToken: accessToken });
                     }
                 }else{
-         
                     res.sendStatus(403);
                 }
             }else{
-                console.log("Token de refresh não confere.");
                 res.sendStatus(403);
             }
         }catch (error) {
