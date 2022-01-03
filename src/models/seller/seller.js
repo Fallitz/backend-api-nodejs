@@ -58,7 +58,15 @@ class seller extends Model{
         }
         async listSellers (limit, offset){
                 try {
-                        const sellers = await knex('sellers').select(['id', 'name', 'avatar']).orderBy([{ column: 'online', order: 'desc' }]).limit(limit).offset(offset);
+                        const sellers = await knex('sellers').select(['id', 'name', 'avatar']).orderBy([{ column: 'online', order: 'desc' }]).limit(limit).offset(offset)
+                        .count('quoteBody', {as: 'rows'})
+                                .then((res)=>{
+                                // console.log("rows "+JSON.stringify(res))
+                                console.log("rowsp "+res[0]['rows'])
+                                })
+                                .catch((err)=>{
+                                console.log("err "+err)
+                        });
                         if(sellers.length > 0){
                                 return {status: true, data: sellers};
                         }else{
