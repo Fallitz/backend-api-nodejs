@@ -34,7 +34,7 @@ class seller extends Model{
         }
         async get (ownerId){
                 try {
-                        const seller = await knex('sellers').where('ownerId', ownerId).select('*');
+                        const seller = await knex('sellers').where('ownerId', ownerId).select(['id', 'name', 'phone', 'description', 'avatar']);
                         if(seller.length > 0){
                                 return {status: true, data: seller[0]};
                         }else{
@@ -46,7 +46,7 @@ class seller extends Model{
         }
         async getById (id){
                 try {
-                        const seller = await knex('sellers').where('id', id).select(['id', 'name', 'phone', 'description', 'country', 'state', 'city', 'number', 'complement', 'zipCode', 'category', 'type', 'acceptDeliver', 'acceptWithdrawal', 'avatar']);
+                        const seller = await knex('sellers').where('id', id).select(['id', 'name', 'phone', 'description', 'avatar']);
                         if(seller.length > 0){
                                 return {status: true, data: seller[0]};
                         }else{
@@ -56,19 +56,23 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
-        async listSellers (limit, offset){
+        async listSellers (lim, skip){
                 try {
-                        const sellers = await knex('sellers').select(['id', 'name', 'avatar']).orderBy([{ column: 'online', order: 'desc' }]).limit(limit).offset(offset)
-                        .count('quoteBody', {as: 'rows'})
-                                .then((res)=>{
-                                // console.log("rows "+JSON.stringify(res))
-                                console.log("rowsp "+res[0]['rows'])
-                                })
-                                .catch((err)=>{
-                                console.log("err "+err)
-                        });
-                        if(sellers.length > 0){
-                                return {status: true, data: sellers};
+                        var limit = parseInt(lim);
+                        var offset = parseInt(skip);
+                        const count = await knex('sellers').count('id as count');
+                        if(limit < 0 || offset < 0){
+                                return {status: false, message: 'Limite e offset devem ser maiores que zero'};
+                        }
+                        if(offset > count[0].count - count[0].count%limit){ 
+                                offset = count[0].count - count[0].count%limit;
+                                limit = count[0].count%limit;
+                        }
+                        const data = await knex('sellers').select(['id', 'name', 'avatar']).orderBy([{ column: 'online', order: 'desc' }]).limit(limit).offset(offset);
+                        const pagination = `${data.length + offset}/${count[0].count}`;
+
+                        if(data.length > 0){
+                                return {status: true, data: data, pagination};
                         }else{
                                 return {status: false, message: 'Nenhuma loja cadastrada'};
                         }
@@ -76,6 +80,29 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
+        async searchSellers (lim, skip, search){
+                try {
+                        var limit = parseInt(lim);
+                        var offset = parseInt(skip);
+                        const count = await knex('sellers').where('name', 'like', `%${search}%`).count('id as count');
+                        if(limit < 0 || offset < 0){
+                                return {status: false, message: 'Limite e offset devem ser maiores que zero'};
+                        }
+                        if(offset > count[0].count - count[0].count%limit){ 
+                                offset = count[0].count - count[0].count%limit;
+                                limit = count[0].count%limit;
+                        }
+                        const data = await knex('sellers').where('name', 'like', `%${search}%`).select(['id', 'name', 'avatar']).limit(limit).offset(offset);
+                        if(data.length > 0){
+                                return {status: true, data: data};
+                        }else{
+                                return {status: true, data: 'Nenhuma loja encontrada'};
+                        }
+                } catch (error) {
+                        return {status: false, message: error.sqlMessage ?? error.message};
+                }
+        }
+        
 }
 
 module.exports = seller;

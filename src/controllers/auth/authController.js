@@ -70,9 +70,12 @@ module.exports = {
                     const modelUser = new Auth();
                     const tokenForLogout = req.headers['access-token'];
                     const result = await modelUser.logout(tokenForLogout);
-                    const accessToken = await util.generateToken({id:req.tokenData.id, code:tokenRefreshVerified.code}, process.env.ACCESS_TOKEN_SECRET, '15m');
+                    const idToken = uuidv4();
+                    const userId = {id:req.tokenData.id, code:idToken}
+                    const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
+                    const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
                     if (result.status){
-                        res.status(200).json({ accessToken: accessToken });
+                        res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
                     }
                 }else{
                     res.sendStatus(403);

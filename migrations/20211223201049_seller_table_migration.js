@@ -16,6 +16,7 @@ exports.up = function(knex) {
         table.string('complement', 50);
         table.string('reference', 50);
         table.string('zipCode', 10).notNullable();
+        table.string('Localization', 100);
         table.string('nationalRegister', 14).notNullable();
         table.string('socialReason', 100).notNullable();
         table.enu('type', ['Loja', 'Restaurante', 'Serviço']).notNullable();
@@ -23,7 +24,7 @@ exports.up = function(knex) {
         table.boolean('acceptDeliver').defaultTo('false').notNullable();
         table.boolean('acceptWithdrawal').defaultTo('false').notNullable();
         table.mediumtext('avatar').notNullable();
-        table.string('rating', 5);
+        table.float('rating');
         table.boolean('online').defaultTo('false').notNullable();
         table.boolean('active').defaultTo('true').notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now());
