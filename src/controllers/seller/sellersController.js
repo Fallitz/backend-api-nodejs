@@ -16,7 +16,6 @@ module.exports = {
                     return res.status(403).json({status: false, message: sellerRegistered.message, field: sellerRegistered.field});
                 }             
             } catch (error) {
-                console.log(error);
                 res.status(500).json({status: false, message: error.message});
             }
         }).catch(function (err) {
@@ -24,9 +23,7 @@ module.exports = {
         });
     },
     async getSeller(req, res){
-
         const id = req.params.id ?? req.tokenData.id;
-
         sellerValidator.id.validate({id}).then(async function () {
             try {
                 const seller = new Seller();
@@ -37,7 +34,6 @@ module.exports = {
                     return res.status(403).json({status: false, message: sellerFound.message});
                 }             
             } catch (error) {
-                console.log(error);
                 res.status(500).json({status: false, message: error.message});
             }
         }).catch(function (err) {
@@ -54,7 +50,6 @@ module.exports = {
                 return res.status(403).json({status: false, message: sellers.message});
             }             
         } catch (error) {
-            console.log(error);
             res.status(500).json({status: false, message: error.message});
         }
     },
@@ -70,7 +65,6 @@ module.exports = {
                     return res.status(403).json({status: false, message: sellers.message});
                 }             
             } catch (error) {
-                console.log(error);
                 res.status(500).json({status: false, message: error.message});
             }
         }).catch(function (err) {

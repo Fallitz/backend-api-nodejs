@@ -54,10 +54,7 @@ class Auth extends Model{
 
     async removeTokensInvalid(){
         const validade = new Date(Date.now() - (1000* 60 * 20)); // 20 minutos
-        var result = await knex('tokens').where('created_at', '<', validade).del();
-        if(result > 0){
-            console.log(result + ' Tokens invalidos removidos');}
-        else{  console.log('Nenhum token removido');}
+        await knex('tokens').where('created_at', '<', validade).del();
     }
         
 }
