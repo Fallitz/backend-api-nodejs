@@ -1,5 +1,6 @@
 const sellerValidator = require('../../modules/http/validators/seller');
 const Seller = require('../../models/seller/seller');
+const { validate: uuidValidate } = require('uuid');
 const { get } = require('timexe');
 
 module.exports = {
@@ -24,6 +25,9 @@ module.exports = {
     },
     async getSeller(req, res){
         const id = req.params.id ?? req.tokenData.id;
+        if (!uuidValidate(id)){
+            return res.status(403).json({status: false, message: 'ID inválido'});
+        }
         sellerValidator.id.validate({id}).then(async function () {
             try {
                 const seller = new Seller();

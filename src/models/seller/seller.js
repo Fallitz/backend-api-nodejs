@@ -34,7 +34,7 @@ class seller extends Model{
         }
         async get (ownerId){
                 try {
-                        const seller = await knex('sellers').where('ownerId', ownerId).select(['id', 'name', 'phone', 'description', 'avatar']);
+                        const seller = await knex('sellers').where('active', 1).where('ownerId', ownerId).select(['id', 'name', 'phone', 'description', 'avatar']);
                         if(seller.length > 0){
                                 return {status: true, data: seller[0]};
                         }else{
@@ -46,7 +46,7 @@ class seller extends Model{
         }
         async getById (id){
                 try {
-                        const seller = await knex('sellers').where('id', id).select(['id', 'name', 'phone', 'description', 'avatar']);
+                        const seller = await knex('sellers').where('active', 1).where('id', id).select(['id', 'name', 'phone', 'description', 'avatar']);
                         if(seller.length > 0){
                                 return {status: true, data: seller[0]};
                         }else{
@@ -68,7 +68,7 @@ class seller extends Model{
                                 offset = count[0].count - count[0].count%limit;
                                 limit = count[0].count%limit;
                         }
-                        const data = await knex('sellers').select(['id', 'name', 'avatar']).orderBy([{ column: 'online', order: 'desc' }]).limit(limit).offset(offset);
+                        const data = await knex('sellers').where('active', 1).select(['id', 'name', 'avatar']).orderBy([{ column: 'online', order: 'desc' }]).limit(limit).offset(offset);
                         const pagination = `${data.length + offset}/${count[0].count}`;
 
                         if(data.length > 0){
@@ -84,7 +84,7 @@ class seller extends Model{
                 try {
                         var limit = parseInt(lim);
                         var offset = parseInt(skip);
-                        const count = await knex('sellers').where('name', 'like', `%${search}%`).count('id as count');
+                        const count = await knex('sellers').where('active', 1).where('name', 'like', `%${search}%`).count('id as count');
                         if(limit < 0 || offset < 0){
                                 return {status: false, message: 'Limite e offset devem ser maiores que zero'};
                         }
@@ -92,7 +92,7 @@ class seller extends Model{
                                 offset = count[0].count - count[0].count%limit;
                                 limit = count[0].count%limit;
                         }
-                        const data = await knex('sellers').where('name', 'like', `%${search}%`).select(['id', 'name', 'avatar']).limit(limit).offset(offset);
+                        const data = await knex('sellers').where('active', 1).where('name', 'like', `%${search}%`).select(['id', 'name', 'avatar']).limit(limit).offset(offset);
                         if(data.length > 0){
                                 return {status: true, data: data};
                         }else{

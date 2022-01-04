@@ -45,7 +45,7 @@ class User extends Model{
     async getUser(id)
     {
         try {
-            const user = await knex('users').where('id', id).select(['id', 'email', 'fullname', 'birth', 'nickname', 'lastAcess_at']);
+            const user = await knex('users').where('active', 1).where('id', id).select(['id', 'email', 'fullname', 'birth', 'nickname', 'lastAcess_at']);
             if(user.length > 0){
                 await util.updateLastLogin(user[0].id);
                 return {status: true, message: user[0]};

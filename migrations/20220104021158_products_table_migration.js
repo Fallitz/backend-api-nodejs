@@ -1,9 +1,9 @@
 
 exports.up = function(knex) {
     return knex.schema
-    .createTable('sellers', function (table) {
+    .createTable('products', function (table) {
         table.uuid('id').primary().defaultTo(knex.raw("(UUID())"));
-        table.uuid('ownerId').references('id').inTable('users').notNullable().defaultTo(knex.raw("(UUID())"));
+        table.uuid('sellerId').references('id').inTable('sellers').notNullable().defaultTo(knex.raw("(UUID())"));
         table.string('name', 100).notNullable();
         table.string('description');
         table.string('phone', 14).notNullable();
@@ -29,11 +29,9 @@ exports.up = function(knex) {
         table.boolean('active').defaultTo('true').notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
-        
-        // table.foreign('ownerId').references('id').inTable('users');
-    })
+    });
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable("sellers");
+  
 };
