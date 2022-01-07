@@ -1,8 +1,8 @@
-const AuthValidator = require('../../modules/http/validators/auth');
-const Auth = require('../../models/auth/auth');
-const util = require('../../modules/util/util');
+const AuthValidator = require('../../../repositories/http/validators/auth');
+const Auth = require('../models/authModel');
+const util = require('../../../repositories/util/util');
 const { v4: uuidv4 } = require('uuid');
-const Mail = require('../../services/mail');
+const Mail = require('../../../services/mail');
 
 module.exports = {
     

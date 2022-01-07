@@ -1,8 +1,6 @@
-const Model = require('../Model');
-const knex = require('../../config/database');
-const util = require('../../modules/util/util');
-const { v4: uuidv4 } = require('uuid');
-const Mail = require('../../services/Mail');
+const knex = require('../../../config/database');
+const Model = require('../../../repositories/models/model');
+const util = require('../../../repositories/util/util');
 
 class seller extends Model{
     

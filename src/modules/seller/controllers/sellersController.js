@@ -1,5 +1,5 @@
-const sellerValidator = require('../../modules/http/validators/seller');
-const Seller = require('../../models/seller/seller');
+const sellerValidator = require('../../../repositories/http/validators/seller');
+const Seller = require('../models/sellerModel');
 const { validate: uuidValidate } = require('uuid');
 const { get } = require('timexe');
 

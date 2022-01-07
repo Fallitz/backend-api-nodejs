@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const fs = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
-const util = require('./modules/util/util');
+const util = require('./repositories/util/util');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

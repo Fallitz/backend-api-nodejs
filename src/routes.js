@@ -2,9 +2,9 @@ const express = require('express');
 const Router = express.Router();
 
 const AuthenticateToken = require('./middleware/authenticateToken');
-const UsersController = require('./controllers/user/usersController');
-const AuthController = require('./controllers/auth/authController');
-const SellerController = require('./controllers/seller/sellersController');
+const UsersController = require('./modules/user/controllers/usersController');
+const AuthController = require('./modules/auth/controllers/authController');
+const SellerController = require('./modules/seller/controllers/sellersController');
 
 //USERS
 Router.post('/users/register', UsersController.create);                                                         //REGISTER USER

@@ -1,5 +1,5 @@
-const UserValidator = require('../../modules/http/validators/user');
-const User = require('../../models/user/user');
+const UserValidator = require('../../../repositories/http/validators/user');
+const User = require('../models/userModel');
 
 module.exports = {
 
