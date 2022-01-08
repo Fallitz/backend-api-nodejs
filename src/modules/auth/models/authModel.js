@@ -24,20 +24,6 @@ class Auth extends Model{
             return {status: false, message: error.sqlMessage ?? error.message};
         }
     }
-
-    /*async login(data){
-        try{
-            const result = await knex('users').where("id", data.id).select('id','email', 'fullname', 'birth', 'nickname', 'lastAcess_at');
-            if(result.length > 0){
-                return {status: true, message: result[0]};
-            }else{
-                return {status: false, message: 'Usuário não encontrado'};
-            }
-        }catch(error){
-            return {status: false, message: error.sqlMessage ?? error.message};
-        }
-          
-    }*/
     
     async logout(token){
         try{

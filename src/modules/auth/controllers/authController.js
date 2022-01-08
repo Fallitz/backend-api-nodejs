@@ -31,21 +31,6 @@ module.exports = {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
-    
-    /*async login(req, res){
-        try {
-            const data = req.tokenData;
-            const modelUser = new Auth();
-            const user = await modelUser.login(data);
-            if(user.status){
-                res.status(200).json({status: true, data: user.message});
-            }else{
-                res.sendStatus(403);
-            }
-        } catch (error) {
-            res.status(500).json({message: error.message});
-        }
-    },*/
 
     async logout(req, res){
         try{
