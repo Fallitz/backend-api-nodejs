@@ -1,9 +1,9 @@
 const WebSocket = require('ws');
-
+const signale = require('signale');
 var wss = null;
 
 function onError(ws, err) {
-    console.error(`onError: ${err.message}`);
+    signale.error(`onError: ${err.message}`);
 }
 function onMessage(ws, data) {
     const json = JSON.parse(data);
@@ -14,7 +14,7 @@ function onConnection(ws, req) {
     ws.on('message', data => onMessage(ws, data));
     ws.on('error', error => onError(ws, error));
     ws.on('close', () => console.log(`Client disconnected in WebSocket Server: ${req.connection.remoteAddress}`));
-    console.log(`Client connected in WebSocket Server: ${req.connection.remoteAddress}`);
+    signale.info(`Client connected in WebSocket Server: ${req.connection.remoteAddress}`);
 }
  
 module.exports = (server) => {
@@ -28,7 +28,7 @@ module.exports = (server) => {
         });
     };
 
-    console.log(`App Web Socket Server is running!`);
+    signale.success(`Web Socket Server Running on Port ${process.env.APP_PORT}`);
 
     return wss;
 }

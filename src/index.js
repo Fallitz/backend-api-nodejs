@@ -8,6 +8,7 @@ const fs = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
 const util = require('./repositories/util/util');
+const signale = require('signale');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,14 +23,19 @@ var data = util.dateFormat(new Date().getDate(), new Date().getMonth() + 1, new 
 app.use(morgan('common', {skip: function(req, res){return res.statusCode < 400 }}));
 app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data + '.log', {flags: 'a'})}));
 
+
+//ROUTES
 const routes = require('./routes');
 const APP_VERSION = process.env.APP_VERSION;
 app.use(`/api/${APP_VERSION}`, routes);
 
+
+//SERVER LISTEN
 const PORT = process.env.APP_PORT;
 const server = app.listen(PORT, () => {
-    console.info(`Server Running on Port ${PORT}`);
-})
+    signale.success(`Server Running on Port ${PORT}`);
+});
+
 
 const appWebSocket = require('./socket');
 appWebSocket(server);
