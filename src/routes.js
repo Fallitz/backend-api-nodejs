@@ -1,9 +1,9 @@
 const express = require('express');
 const Router = express.Router();
 
-const authRouters = require('./modules/auth/routes/authRouters');
-const userRouters = require('./modules/user/routes/usersRouters'); 
-const sellerRouters = require('./modules/seller/routes/sellersRouters');
+const authRouters = require('./modules/auth/routers/authRouters');
+const userRouters = require('./modules/user/routers/usersRouters'); 
+const sellerRouters = require('./modules/seller/routers/sellersRouters');
 
 //MODULES ROUTERS
 Router.use("/auth", authRouters);
