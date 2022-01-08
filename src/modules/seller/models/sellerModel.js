@@ -30,6 +30,7 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
+
         async get (ownerId){
                 try {
                         const seller = await knex('sellers').where('active', 1).where('ownerId', ownerId).select(['id', 'name', 'phone', 'description', 'avatar']);
@@ -42,6 +43,7 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
+
         async getById (id){
                 try {
                         const seller = await knex('sellers').where('active', 1).where('id', id).select(['id', 'name', 'phone', 'description', 'avatar']);
@@ -54,6 +56,7 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
+
         async listSellers (lim, skip){
                 try {
                         var limit = parseInt(lim);
@@ -78,6 +81,7 @@ class seller extends Model{
                         return {status: false, message: error.sqlMessage ?? error.message};
                 }
         }
+        
         async searchSellers (lim, skip, search){
                 try {
                         var limit = parseInt(lim);

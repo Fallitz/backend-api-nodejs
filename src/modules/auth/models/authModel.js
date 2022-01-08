@@ -5,7 +5,7 @@ var  timexe  =  require( 'timexe' );
 
 class Auth extends Model{
 
-    async authenticate({email, password}) {
+    async authenticate({email, password}){
         try{
             const dbemail = await knex('users').where("email", email.toLowerCase()).select('id', 'password', 'active');
             if (dbemail.length > 0 && dbemail[0].active == 1) {

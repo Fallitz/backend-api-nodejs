@@ -4,10 +4,6 @@ const util = require('../../../repositories/util/util');
 const { v4: uuidv4 } = require('uuid');
 
 class User extends Model{
-    
-    constructor(){
-        super()
-    }
 
     async create(data){
         try {
@@ -41,8 +37,7 @@ class User extends Model{
         }
     }
 
-    async getUser(id)
-    {
+    async getUser(id){
         try {
             const user = await knex('users').where('active', 1).where('id', id).select(['id', 'email', 'fullname', 'birth', 'nickname', 'lastAcess_at']);
             if(user.length > 0){
