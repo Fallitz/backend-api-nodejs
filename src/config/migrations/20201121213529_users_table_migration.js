@@ -22,6 +22,7 @@ exports.up = function(knex) {
             table.string('zipCode', 10);
             table.string('cpfnumber', 11);
             table.mediumtext('avatar');
+            table.uuid('recovery_code');
             table.boolean('active').defaultTo('true').notNullable();
             table.timestamp('created_at').defaultTo(knex.fn.now());
             table.timestamp('updated_at').defaultTo(knex.fn.now());

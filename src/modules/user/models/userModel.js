@@ -8,7 +8,7 @@ class User extends Model{
     async create(data){
         try {
             const email = data.email.toLowerCase();
-            const emailWasRegistered = await knex('users').where('email', email);
+            const emailWasRegistered = await knex('users').where('email', email).select(['email']);
             if(emailWasRegistered.length > 0){
                 return {status: false, message: 'Email já registrado', field: 'email'};
             }else{
