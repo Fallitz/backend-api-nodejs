@@ -2,6 +2,7 @@ const express = require('express');
 const Router = express.Router();
 
 const AuthenticateToken = require('./middleware/authenticateToken');
+
 const UsersController = require('./modules/user/controllers/usersController');
 const AuthController = require('./modules/auth/controllers/authController');
 const SellerController = require('./modules/seller/controllers/sellersController');
@@ -14,12 +15,12 @@ Router.get('/users/getUser', AuthenticateToken, UsersController.getUser);       
 
 //AUTH
 Router.post('/users/auth', AuthController.auth);                                                                //AUTHENTICATE USER
-//Router.get('/users/login', AuthenticateToken , AuthController.login);                                         //LOGIN USER
 Router.delete('/users/logout', AuthenticateToken, AuthController.logout);                                       //LOGOUT USER
 Router.post('/users/refreshToken', AuthenticateToken, AuthController.refreshToken);                             //REFRESH TOKEN
 //Router.post('/users/auth/forgot' , AuthController.forgot);                                                    //FORGOT PASSWORD
 //Router.get('/users/auth/forgot' , AuthController.alterPassword);                                              //ALTER PASSWORD
 
+//SELLERS
 Router.post('/sellers/create', AuthenticateToken, SellerController.create);                                     //CREATE SELLER
 Router.get('/sellers/getSeller/', AuthenticateToken, SellerController.getSeller);                               //GET SELLER BY TOKEN
 Router.get('/sellers/getSellerById/:id', AuthenticateToken, SellerController.getSeller);                        //GET SELLER BY ID
