@@ -18,8 +18,8 @@ class User extends Model{
                 if(user.length > 0){
                     const code = uuidv4();
                     const userId = {id: user[0].id, code: code};
-                    const acessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
-                    const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
+                    const acessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRES_IN ?? '15m');
+                    const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_EXPIRES_IN ?? '7d');
                     
                     //const mail = new Mail("DevTube <transational@devtube.io>", "Welcome to DevTube", `Olá ${this.fullname}, Seja Bem Vindo ao <b>DevTube</b> !`);
                     //await mail.send()

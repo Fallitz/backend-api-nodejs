@@ -1,7 +1,6 @@
 const AuthValidator = require('../../../repositories/http/validators/auth');
 const Auth = require('../models/authModel');
 const util = require('../../../repositories/util/util');
-const { v4: uuidv4 } = require('uuid');
 const Mail = require('../../../services/mail');
 
 module.exports = {
@@ -13,12 +12,9 @@ module.exports = {
                 {
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
+                    console.log(user);
                     if(user.status){
-                        const idToken = uuidv4();
-                        const userId = {id: user.message.id, code: idToken};
-                        const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
-                        const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
-                        res.json({status: true, accessToken: accessToken, refreshToken: refreshToken });
+                        res.json({status: true, accessToken: user.message.accessToken, refreshToken: user.message.refreshToken});
                     }else{
                         res.status(403).json({status: false, message: 'E-mail e/ou senha estão incorretos.'}) ;
                     }
