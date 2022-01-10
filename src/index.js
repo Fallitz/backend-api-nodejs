@@ -13,12 +13,12 @@ var path = require('path');
 var rfs = require('rotating-file-stream');
 var timexe = require( 'timexe' );
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(helmet());
 app.use(express.json());
+
 
 //LOGGING
 var accessLogStream = rfs.createStream("access.log", {size: "10M", interval: "1d", compress: "gzip", path: path.join(__dirname, '../log')});
