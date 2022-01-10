@@ -44,7 +44,7 @@ const appWebSocket = require('./socket');
 appWebSocket(server);
 
 
-//REMOVE TOKENS INVÁLIDOS
+//REMOVE INVALID TOKENS
 timexe ("* * * 0-23 / 1" ,  function ( ) {  
     const validade = new Date(Date.now() - (1000* 60 * 20)); // 20 minutos
     knex('tokens').where('created_at', '<', validade).del();
