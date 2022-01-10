@@ -8,7 +8,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 const signale = require('signale');
 const routes = require('./routes');
-const util = require('./repositories/util/util');
+const knex = require('./config/database');
+var path = require('path');
+var rfs = require('rotating-file-stream');
+var timexe = require( 'timexe' );
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,13 +21,16 @@ app.use(helmet());
 app.use(express.json());
 
 //LOGGING
-var data = util.dateFormat(new Date().getDate(), new Date().getMonth() + 1, new Date().getFullYear());
-app.use(morgan('common', {skip: function(req, res){return res.statusCode < 400 }}));
-app.use(morgan('combined', {stream: fs.createWriteStream('./log/' + data + '.log', {flags: 'a'})}));
+var accessLogStream = rfs.createStream("access.log", {size: "10M", interval: "1d", compress: "gzip", path: path.join(__dirname, '../log')});
+morgan.token('token', function getId (req) {return req.headers['access-token'];});
+app.use(morgan(':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" Status=:status Size=:res[content-length] Referrer=":referrer" User-Agent":user-agent" Response-Time=:response-time Token=":token"', {skip: function(req, res){return res.statusCode < 400 }}));
+app.use(morgan(':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" Status=:status Size=:res[content-length] Referrer=":referrer" User-Agent":user-agent" Response-Time=:response-time Token=":token"', {stream: accessLogStream}));
+
 
 //ROUTERS
 const APP_VERSION = process.env.APP_VERSION;
 app.use(`/api/${APP_VERSION}`, routes);
+
 
 //SERVER LISTEN
 const PORT = process.env.APP_PORT;
@@ -31,5 +38,16 @@ const server = app.listen(PORT, () => {
     signale.success(`Server Running on Port ${PORT}`);
 });
 
+
+//SOCKET START
 const appWebSocket = require('./socket');
 appWebSocket(server);
+
+
+//REMOVE TOKENS INVÁLIDOS
+timexe ("* * * 0-23 / 1" ,  function ( ) {  
+    const validade = new Date(Date.now() - (1000* 60 * 20)); // 20 minutos
+    knex('tokens').where('created_at', '<', validade).del();
+    // * * * 0-23 / 1                   //A CADA 1 minuto
+    //* * w1-7 / 3                      //A CADA 3 horas
+});
