@@ -1,13 +1,13 @@
-const knex = require('../../../config/database');
-const Model = require('../../../repositories/models/model');
-const util = require('../../../repositories/util/util');
-
+const productValidator = require('../../../repositories/http/validators/product');
+const Product = require('../models/productModel');
+const { validate: uuidValidate } = require('uuid');
+const { get } = require('timexe');
 
 module.exports = {
 
     async create(req, res){
         const data = req.body;
-        sellerValidator.create.validate({...data}).then(async function () {
+        productValidator.create.validate({...data}).then(async function () {
             try {
                 const seller = new Seller();
                 const sellerRegistered = await seller.create({...data, ownerId: req.tokenData.id});
