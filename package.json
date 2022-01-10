@@ -6,8 +6,8 @@
   "author": "Fallitz <fallitzdev@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node ./src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node --trace-warnings ./src/index.js",
+    "dev": "nodemon ./src/index.js",
     "migrate": "npx knex migrate:latest",
     "unmigrate": "npx knex migrate:rollback",
     "seed": "npx knex seed:run "
@@ -29,6 +29,7 @@
     "mysql2": "^2.2.5",
     "nodemailer": "^6.7.2",
     "pluralize": "^8.0.0",
+    "rotating-file-stream": "^3.0.2",
     "signale": "^1.4.0",
     "timexe": "^1.0.5",
     "uuid": "^8.3.2",
