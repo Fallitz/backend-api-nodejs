@@ -16,7 +16,8 @@ class seller extends Model{
                                         const ownerId = sellerWasRegistered[0].id;
                                         const address = data.address;
                                         delete data.address;
-                                        const seller = await knex('sellers').insert({...data, ...address, id, ownerId}).then(() => {return knex ('sellers').where('id', id).select('name')});
+                                        const normalized = data.name.toLowerCase();
+                                        const seller = await knex('sellers').insert({...data, ...address, id, ownerId, normalized}).then(() => {return knex ('sellers').where('id', id).select('name')});
                                         if(seller.length > 0){
                                                 return {status: true, data: seller[0]};
                                         }else{
@@ -86,7 +87,8 @@ class seller extends Model{
                 try {
                         var limit = parseInt(lim);
                         var offset = parseInt(skip);
-                        const count = await knex('sellers').where('active', 1).where('name', 'like', `%${search}%`).count('id as count');
+                        const buscar = search.toLowerCase();
+                        const count = await knex('sellers').where('active', 1).where('normalized', 'like', `%${buscar}%`).count('id as count');
                         if(limit < 0 || offset < 0){
                                 return {status: false, message: 'Limite e offset devem ser maiores que zero'};
                         }
@@ -94,7 +96,7 @@ class seller extends Model{
                                 offset = count[0].count - count[0].count%limit;
                                 limit = count[0].count%limit;
                         }
-                        const data = await knex('sellers').where('active', 1).where('name', 'like', `%${search}%`).select(['id', 'name', 'avatar']).limit(limit).offset(offset);
+                        const data = await knex('sellers').where('active', 1).where('normalized', 'like', `%${buscar}%`).select(['id', 'name', 'avatar']).limit(limit).offset(offset);
                         if(data.length > 0){
                                 return {status: true, data: data};
                         }else{

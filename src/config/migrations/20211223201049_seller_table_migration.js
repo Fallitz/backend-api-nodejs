@@ -5,6 +5,7 @@ exports.up = function(knex) {
         table.uuid('id').primary().defaultTo(knex.raw("(UUID())"));
         table.uuid('ownerId').references('id').inTable('users').notNullable().defaultTo(knex.raw("(UUID())"));
         table.string('name', 100).notNullable();
+        table.string('normalized', 100).notNullable();
         table.string('description');
         table.string('phone', 14).notNullable();
         table.string('country', 10).notNullable();
