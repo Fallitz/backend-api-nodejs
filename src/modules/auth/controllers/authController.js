@@ -12,9 +12,8 @@ module.exports = {
                 {
                     const modelUser = new Auth();
                     const user = await modelUser.authenticate(data);
-                    console.log(user);
                     if(user.status){
-                        res.json({status: true, accessToken: user.message.accessToken, refreshToken: user.message.refreshToken});
+                        res.json({status: true, message: 'Bem-vindo de volta!', data:{ accessToken: user.message.accessToken, refreshToken: user.message.refreshToken}});
                     }else{
                         res.status(403).json({status: false, message: 'E-mail e/ou senha estão incorretos.'}) ;
                     }
@@ -50,13 +49,9 @@ module.exports = {
                 if (tokenRefreshVerified.code == req.tokenData.code){
                     const modelUser = new Auth();
                     const tokenForLogout = req.headers['access-token'];
-                    const result = await modelUser.logout(tokenForLogout);
-                    const idToken = uuidv4();
-                    const userId = {id:req.tokenData.id, code:idToken}
-                    const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, '15m');
-                    const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, '7d');
+                    const result = await modelUser.refreshToken(req.tokenData.id, tokenForLogout);
                     if (result.status){
-                        res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
+                        res.status(200).json({ accessToken: result.data.accessToken, refreshToken: result.data.refreshToken });
                     }
                 }else{
                     res.sendStatus(403);
