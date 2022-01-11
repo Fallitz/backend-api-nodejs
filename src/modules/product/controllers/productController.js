@@ -5,7 +5,7 @@ const { get } = require('timexe');
 
 module.exports = {
 
-    async create(req, res){
+    /*async create(req, res){
         const data = req.body;
         productValidator.create.validate({...data}).then(async function () {
             try {
@@ -22,6 +22,6 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
-    },
+    },*/
 
 }
