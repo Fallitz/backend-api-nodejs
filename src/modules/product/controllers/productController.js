@@ -9,12 +9,12 @@ module.exports = {
         const data = req.body;
         productValidator.create.validate({...data}).then(async function () {
             try {
-                const seller = new Seller();
-                const sellerRegistered = await seller.create({...data, ownerId: req.tokenData.id});
-                if(sellerRegistered.status){
-                    return res.status(201).json({status: true, message: 'Loja criada com sucesso', data: {store: sellerRegistered.data}});
+                const product = new Product();
+                const productRegistered = await product.create({...data, ownerId: req.tokenData.id});
+                if(productRegistered.status){
+                    return res.status(201).json({status: true, message: 'Loja criada com sucesso', data: {store: productRegistered.data}});
                 }else{
-                    return res.status(403).json({status: false, message: sellerRegistered.message, field: sellerRegistered.field});
+                    return res.status(403).json({status: false, message: productRegistered.message, field: productRegistered.field});
                 }             
             } catch (error) {
                 res.status(500).json({status: false, message: error.message});
