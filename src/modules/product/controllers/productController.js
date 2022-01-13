@@ -5,14 +5,14 @@ const { get } = require('timexe');
 
 module.exports = {
 
-    /*async create(req, res){
+    async create(req, res){
         const data = req.body;
         productValidator.create.validate({...data}).then(async function () {
             try {
                 const product = new Product();
-                const productRegistered = await product.create({...data, ownerId: req.tokenData.id});
+                const productRegistered = await product.create({...data, sellerId: req.tokenData.id});
                 if(productRegistered.status){
-                    return res.status(201).json({status: true, message: 'Loja criada com sucesso', data: {store: productRegistered.data}});
+                    return res.status(201).json({status: true, message: 'Produto criado com sucesso', data: {store: productRegistered.data}});
                 }else{
                     return res.status(403).json({status: false, message: productRegistered.message, field: productRegistered.field});
                 }             
@@ -22,6 +22,6 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
-    },*/
+    },
 
 }
