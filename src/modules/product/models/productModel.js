@@ -7,23 +7,14 @@ class Products extends Model{
         try {
                 const sellerWasRegistered = await knex('sellers').where('ownerId', data.ownerId).select('id');
                 if(sellerWasRegistered.length > 0){
-                        const id = await util.createId("idProduct "+ data.ownerId);
-                    
-
-
-                        const ownerId = sellerWasRegistered[0].id;
-                        const address = data.address;
-                        delete data.address;
+                        const id = await util.createId("idProduct "+ sellerWasRegistered[0].id);
                         const normalized = data.name.toLowerCase();
-                        const seller = await knex('sellers').insert({...data, ...address, id, ownerId, normalized}).then(() => {return knex ('sellers').where('id', id).select('name')});
+                        const seller = await knex('products').insert({...data, id, sellerId: sellerWasRegistered[0].id, normalized}).then(() => {return knex ('sellers').where('id', id).select('name')});
                         if(seller.length > 0){
                                 return {status: true, data: seller[0]};
                         }else{
                                 return {status: false, message: 'Loja não foi cadastrada'};
                         }
-
-                        
-                
                 }else{
                         return {status: false, message: 'Vendedor não encontrado', field: 'ownerId'};
                 }
