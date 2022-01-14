@@ -10,7 +10,7 @@ module.exports = {
         productValidator.create.validate({...data}).then(async function () {
             try {
                 const product = new Product();
-                const productRegistered = await product.create({...data, sellerId: req.tokenData.id});
+                const productRegistered = await product.create({...data, ownerId: req.tokenData.id});
                 if(productRegistered.status){
                     return res.status(201).json({status: true, message: 'Produto criado com sucesso', data: {store: productRegistered.data}});
                 }else{
