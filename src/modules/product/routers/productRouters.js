@@ -8,7 +8,7 @@ class userRouter {
 
         const Router = express.Router();
     
-        Router.post('/', ProductController.create);                                                               //CREATE PRODUCT
+        Router.post('/', AuthenticateToken ,ProductController.create);                                                               //CREATE PRODUCT
        
         return Router
     }

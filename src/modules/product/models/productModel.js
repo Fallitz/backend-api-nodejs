@@ -1,22 +1,23 @@
 const knex = require('../../../config/database');
 const Model = require('../../../repositories/models/model');
 const util = require('../../../repositories/util/util');
+const { v4: uuidv4 } = require('uuid');
 
 class Products extends Model{
     async create(data){
         try {
                 const sellerWasRegistered = await knex('sellers').where('ownerId', data.ownerId).select('id');
                 if(sellerWasRegistered.length > 0){
-                        const id = await util.createId("idProduct "+ sellerWasRegistered[0].id);
-                        const normalized = data.name.toLowerCase();
-                        const seller = await knex('products').insert({...data, id, sellerId: sellerWasRegistered[0].id, normalized}).then(() => {return knex ('sellers').where('id', id).select('name')});
-                        if(seller.length > 0){
-                                return {status: true, data: seller[0]};
+                        const id = uuidv4();
+                        delete data.ownerId;
+                        const product = await knex('products').insert({...data, id, sellerId: sellerWasRegistered[0].id}).then(() => {return knex ('products').where('id', id).select('name')});
+                        if(product.length > 0){
+                                return {status: true, data: product[0]};
                         }else{
                                 return {status: false, message: 'Produto não foi cadastrado'};
                         }
                 }else{
-                        return {status: false, message: 'Loja não encontrado', field: 'ownerId'};
+                        return {status: false, message: 'Loja não cadastrada', field: 'ownerId'};
                 }
         }catch (error) {
                 return {status: false, message: error.sqlMessage ?? error.message};

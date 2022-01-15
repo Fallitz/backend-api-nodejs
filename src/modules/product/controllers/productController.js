@@ -1,7 +1,5 @@
 const productValidator = require('../../../repositories/http/validators/product');
 const Product = require('../models/productModel');
-const { validate: uuidValidate } = require('uuid');
-const { get } = require('timexe');
 
 module.exports = {
 
