@@ -3,17 +3,12 @@ const Validator = require('../Validator')
 const schema ={
     create: Validator.object().shape({
         name: Validator.string().required().min(3),
-        description: Validator.string(),
-        price: Validator.number().required(),
-        discount: Validator.number(),
-        quantity: Validator.number().required(),
-        type: Validator.string().required(),
+        description: Validator.string().required(),
         category: Validator.string().required(),
-        tags: Validator.array().required(),
-        status: Validator.string().required(),
-        qntEstoque: Validator.string().required(),
-        category: Validator.string().required(),
-        avatar: Validator.string(),
+        subcategory: Validator.string().required(),
+        price: Validator.string().required(),
+        stock: Validator.string().required(),
+        avatar: Validator.string().required()
     }),
     id: Validator.object().shape({
         id: Validator.string().required().min(36).max(36),

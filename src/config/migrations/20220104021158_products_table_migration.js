@@ -8,9 +8,8 @@ exports.up = function(knex) {
         table.string('description', 500).notNullable();
         table.string('category', 100).notNullable();
         table.string('subcategory', 100).notNullable();
-        table.string('pryce', 20).notNullable();
-        table.string('pryceAPrazo', 20).notNullable();
-        table.string('pryceAVista', 20).notNullable();
+        table.string('stock', 100).notNullable();
+        table.string('price', 20).notNullable();
         table.mediumtext('avatar').notNullable();
         table.float('rating');
         table.boolean('active').defaultTo('true').notNullable();
