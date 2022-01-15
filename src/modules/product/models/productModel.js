@@ -13,10 +13,10 @@ class Products extends Model{
                         if(seller.length > 0){
                                 return {status: true, data: seller[0]};
                         }else{
-                                return {status: false, message: 'Loja não foi cadastrada'};
+                                return {status: false, message: 'Produto não foi cadastrado'};
                         }
                 }else{
-                        return {status: false, message: 'Vendedor não encontrado', field: 'ownerId'};
+                        return {status: false, message: 'Loja não encontrado', field: 'ownerId'};
                 }
         }catch (error) {
                 return {status: false, message: error.sqlMessage ?? error.message};
