@@ -10,6 +10,6 @@ const productRouters = require('./modules/product/routers/productRouters');
 Router.use("/auth", authRouters);
 Router.use("/users", userRouters);
 Router.use("/sellers", sellerRouters);
-Router.use("/product", productRouters);
+Router.use("/products", productRouters);
 
 module.exports = Router;
