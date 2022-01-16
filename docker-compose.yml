@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  webapp:
+    build: ./src
+    volumes:
+      - ./src:./usr/src/app
+    ports:
+     - 3333:3333
