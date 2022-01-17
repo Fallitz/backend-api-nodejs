@@ -37,7 +37,7 @@ const PORT = process.env.APP_PORT;
 const server = app.listen(PORT, () => {
     signale.success(`Server Running on Port ${PORT}`);
 });
-
+console.log(`Server Running on Port ${PORT}`);
 
 //SOCKET START
 const appWebSocket = require('./socket');
