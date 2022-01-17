@@ -22,4 +22,19 @@ module.exports = {
         });
     },
 
+    async getById(req, res){
+        const id = req.params.id;
+        try {
+            const product = new Product();
+            const productFound = await product.getById(id);
+            if(productFound.status){
+                return res.status(200).json({status: true, message: 'Produto encontrado', data: {product: productFound.data}});
+            }else{
+                return res.status(404).json({status: false, message: productFound.message});
+            }
+        } catch (error) {
+            res.status(500).json({status: false, message: error.message});
+        }
+    }
+
 }
