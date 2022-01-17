@@ -1,6 +1,5 @@
 const knex = require('../../../config/database');
 const Model = require('../../../repositories/models/model');
-const util = require('../../../repositories/util/util');
 const { v4: uuidv4 } = require('uuid');
 
 class Products extends Model{

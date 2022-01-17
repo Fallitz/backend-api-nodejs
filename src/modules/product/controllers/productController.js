@@ -35,6 +35,21 @@ module.exports = {
         } catch (error) {
             res.status(500).json({status: false, message: error.message});
         }
+    },
+
+    async getBySellerId(req, res){
+        const sellerId = req.params.sellerId;
+        try {
+            const product = new Product();
+            const productsFound = await product.getBySellerId(sellerId);
+            if(productsFound.status){
+                return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
+            }else{
+                return res.status(404).json({status: false, message: productsFound.message});
+            }
+        } catch (error) {
+            res.status(500).json({status: false, message: error.message});
+        }
     }
 
 }
