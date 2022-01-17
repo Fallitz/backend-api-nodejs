@@ -22,8 +22,8 @@ class Products extends Model{
         }catch (error) {
 			return {status: false, message: error.sqlMessage ?? error.message};
         }
-    }
-
+    }	
+	
 	async getById(id){
 		try {
 			const product = await knex('products').where('id', id).select('name', 'description', 'price', 'sellerId');
@@ -36,6 +36,21 @@ class Products extends Model{
 			return {status: false, message: error.sqlMessage ?? error.message};
 		}
 	}
+
+	async getBySellerId(sellerId){
+		try {
+			const products = await knex('products').where('sellerId', sellerId).select('id', 'name', 'description', 'price');
+			if(products.length > 0){
+				return {status: true, data: products};
+			}else{
+				return {status: false, message: 'Nenhum produto encontrado'};
+			}
+		}catch (error) {
+			return {status: false, message: error.sqlMessage ?? error.message};
+		}
+	}
+
+	
 }
 
 module.exports = Products;
