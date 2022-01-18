@@ -8,9 +8,9 @@ class userRouter {
 
         const Router = express.Router();
     
-        Router.post('/create', AuthenticateToken ,ProductController.create);                                                                  //CREATE PRODUCT
-        Router.get('/:id', AuthenticateToken ,ProductController.getById);                                                               //GET PRODUCT BY ID
-        Router.get('/seller/:id', AuthenticateToken ,ProductController.getBySellerId);                                                  //GET PRODUCT BY SELLER ID
+        Router.post('/create', AuthenticateToken ,ProductController.create);                                                                    //CREATE PRODUCT
+        Router.get('/:id', AuthenticateToken ,ProductController.getById);                                                                       //GET PRODUCT BY ID
+        Router.get('/getBySellerId/:sellerId/:lim/:skip', AuthenticateToken ,ProductController.getBySellerId);                                               //GET PRODUCT BY SELLER ID
 
         return Router
     }
