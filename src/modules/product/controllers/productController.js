@@ -41,7 +41,7 @@ module.exports = {
         const sellerId = req.params.sellerId;
         try {
             const product = new Product();
-            const productsFound = await product.getBySellerId(sellerId);
+            const productsFound = await product.getBySellerId(sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
             if(productsFound.status){
                 return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
             }else{
