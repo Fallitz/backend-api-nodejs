@@ -64,6 +64,30 @@ class Products extends Model{
 		}
 	}
 
+	async listProducts(lim, skip){
+		try {
+			var limit = parseInt(lim);
+			var offset = parseInt(skip);
+			const count = await knex('products').count('id as count');
+			if(limit < 0 || offset < 0){
+				return {status: false, message: 'Limite e offset devem ser maiores que zero'};
+			}
+			if(offset > count[0].count - count[0].count%limit){ 
+				offset = count[0].count - count[0].count%limit;
+				limit = count[0].count%limit;
+			}
+			const products = await knex('products').select('id', 'name', 'description', 'price').orderBy([{ column: 'created_at', order: 'asc' },{ column: 'name', order: 'asc' }]).limit(limit).offset(offset);
+			const pagination = `${products.length + offset}/${count[0].count}`;
+			if(products.length > 0){
+				return {status: true, data: products, pagination};
+			}else{
+				return {status: false, message: 'Nenhum produto encontrado'};
+			}
+		}catch (error) {
+			return {status: false, message: error.sqlMessage ?? error.message};
+		}
+	}
+
 	async searchProduct(name, lim, skip){
 		try {
 			if (name == "" || name == undefined || name == null){
