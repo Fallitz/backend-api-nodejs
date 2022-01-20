@@ -53,6 +53,21 @@ module.exports = {
         }
     },
 
+    async getByCategoryId(req, res){
+        const categoryId = req.params.categoryId;
+        try {
+            const product = new Product();
+            const productsFound = await product.getByCategoryId(categoryId, req.params.lim ?? 10, req.params.skip ?? 0);
+            if(productsFound.status){
+                return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
+            }else{
+                return res.status(404).json({status: false, message: productsFound.message});
+            }
+        } catch (error) {
+            res.status(500).json({status: false, message: error.message});
+        }
+    },
+
     async listProducts(req, res){
         try {
             const product = new Product();
