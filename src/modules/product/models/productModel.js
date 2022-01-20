@@ -52,7 +52,7 @@ class Products extends Model{
 				offset = count[0].count - count[0].count%limit;
 				limit = count[0].count%limit;
 			}
-			const products = await knex('products').where('sellerId', sellerId).select('id', 'name', 'description', 'price').orderBy([{ column: 'name', order: 'asc' }]).limit(limit).offset(offset);
+			const products = await knex('products').where('sellerId', sellerId).select('id', 'name', 'description', 'price').orderBy([{ column: 'created_at', order: 'asc' },{ column: 'name', order: 'asc' }]).limit(limit).offset(offset);
 			const pagination = `${products.length + offset}/${count[0].count}`;
 			if(products.length > 0){
 				return {status: true, data: products, pagination};
