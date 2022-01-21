@@ -24,11 +24,11 @@ module.exports = {
     },
 
     async getById(req, res){
-        const id = req.body.id;
+        const data = req.body;
         productValidator.id.validate({...data}).then(async function () {
             try {
                 const product = new Product();
-                const productFound = await product.getById(id);
+                const productFound = await product.getById(data.id);
                 if(productFound.status){
                     return res.status(200).json({status: true, message: 'Produto encontrado', data: {product: productFound.data}});
                 }else{
@@ -43,11 +43,11 @@ module.exports = {
     },
 
     async getBySellerId(req, res){
-        const sellerId = req.body.sellerId;
+        const data = req.body;
         productValidator.sellerId.validate({...data}).then(async function () {
             try {
                 const product = new Product();
-                const products = await product.getBySellerId(sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
+                const products = await product.getBySellerId(data.sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
                 if(products.status){
                     return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: products.data, pagination: products.pagination}});
                 }else{
@@ -62,18 +62,22 @@ module.exports = {
     },
 
     async getByCategoryId(req, res){
-        const categoryId = req.body.categoryId;
-        try {
-            const product = new Product();
-            const productsFound = await product.getByCategoryId(categoryId, req.params.lim ?? 10, req.params.skip ?? 0);
-            if(productsFound.status){
-                return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
-            }else{
-                return res.status(403).json({status: false, message: productsFound.message});
-            }
-        } catch (error) {
-            res.status(500).json({status: false, message: error.message});
-        }
+        const data = req.body;
+        productValidator.categoriaId.validate({...data}).then(async function () {
+            try {
+                const product = new Product();
+                const productsFound = await product.getByCategoryId(data.categoryId, req.params.lim ?? 10, req.params.skip ?? 0);
+                if(productsFound.status){
+                    return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
+                }else{
+                    return res.status(403).json({status: false, message: productsFound.message});
+                }
+            } catch (error) {
+                res.status(500).json({status: false, message: error.message});
+            }  
+        }).catch(function (err) {
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
+        });  
     },
 
     async listProducts(req, res){
