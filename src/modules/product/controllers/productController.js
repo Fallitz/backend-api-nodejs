@@ -42,11 +42,11 @@ module.exports = {
         const sellerId = req.params.sellerId;
         try {
             const product = new Product();
-            const productsFound = await product.getBySellerId(sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
-            if(productsFound.status){
-                return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
+            const products = await product.getBySellerId(sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
+            if(products.status){
+                return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: products.data, pagination: products.pagination}});
             }else{
-                return res.status(404).json({status: false, message: productsFound.message});
+                return res.status(404).json({status: false, message: products.message});
             }
         } catch (error) {
             res.status(500).json({status: false, message: error.message});
