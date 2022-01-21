@@ -31,7 +31,7 @@ module.exports = {
             if(productFound.status){
                 return res.status(200).json({status: true, message: 'Produto encontrado', data: {product: productFound.data}});
             }else{
-                return res.status(404).json({status: false, message: productFound.message});
+                return res.status(403).json({status: false, message: productFound.message});
             }
         } catch (error) {
             res.status(500).json({status: false, message: error.message});
@@ -46,7 +46,7 @@ module.exports = {
             if(products.status){
                 return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: products.data, pagination: products.pagination}});
             }else{
-                return res.status(404).json({status: false, message: products.message});
+                return res.status(403).json({status: false, message: products.message});
             }
         } catch (error) {
             res.status(500).json({status: false, message: error.message});
@@ -61,7 +61,7 @@ module.exports = {
             if(productsFound.status){
                 return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
             }else{
-                return res.status(404).json({status: false, message: productsFound.message});
+                return res.status(403).json({status: false, message: productsFound.message});
             }
         } catch (error) {
             res.status(500).json({status: false, message: error.message});
@@ -91,7 +91,7 @@ module.exports = {
                 if(productsFound.status){
                     return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
                 }else{
-                    return res.status(404).json({status: false, message: productsFound.message});
+                    return res.status(403).json({status: false, message: productsFound.message});
                 }
             } catch (error) {
                 res.status(500).json({status: false, message: error.message});
