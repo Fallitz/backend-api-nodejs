@@ -25,6 +25,9 @@ module.exports = {
 
     async getById(req, res){
         const data = req.body;
+        if (!uuidValidate(data.id)){
+            return res.status(403).json({status: false, message: 'ID inválido'});
+        }
         productValidator.id.validate({...data}).then(async function () {
             try {
                 const product = new Product();
@@ -44,6 +47,9 @@ module.exports = {
 
     async getBySellerId(req, res){
         const data = req.body;
+        if (!uuidValidate(data.sellerId)){
+            return res.status(403).json({status: false, message: 'ID inválido'});
+        }
         productValidator.sellerId.validate({...data}).then(async function () {
             try {
                 const product = new Product();
@@ -63,6 +69,9 @@ module.exports = {
 
     async getByCategoryId(req, res){
         const data = req.body;
+        // if (!uuidValidate(data.sellerId)){
+            // return res.status(403).json({status: false, message: 'ID inválido'});
+        // }
         productValidator.categoriaId.validate({...data}).then(async function () {
             try {
                 const product = new Product();
