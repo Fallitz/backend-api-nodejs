@@ -23,15 +23,16 @@ module.exports = {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
+
     async getSeller(req, res){
-        const id = req.params.id ?? req.tokenData.id;
+        const data = req.body.ownerId ?? req.tokenData.id;
         if (!uuidValidate(id)){
             return res.status(403).json({status: false, message: 'ID inválido'});
         }
-        sellerValidator.id.validate({id}).then(async function () {
+        sellerValidator.ownerId.validate({...data}).then(async function () {
             try {
                 const seller = new Seller();
-                const sellerFound = req.params.id ? await seller.getById(id) : await seller.get(id);
+                const sellerFound = req.params.id ? await seller.getById(data.id) : await seller.getByOwnerId(data.ownerId);
                 if(sellerFound.status){
                     return res.status(200).json({status: true, data: sellerFound.data});
                 }else{
@@ -44,6 +45,7 @@ module.exports = {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
+
     async listSellers(req, res){
         try {
             const seller = new Seller();
@@ -57,12 +59,13 @@ module.exports = {
             res.status(500).json({status: false, message: error.message});
         }
     },
+
     async searchSellers(req, res){
         const data = req.body;
         sellerValidator.search.validate({...data}).then(async function () {
             try {
                 const seller = new Seller();
-                const sellers = await seller.searchSellers(req.query.limit ?? 10, req.query.offset ?? 0, data.search);
+                const sellers = await seller.searchSellers(data.search, req.query.limit ?? 10, req.query.offset ?? 0);
                 if(sellers.status){
                     return res.status(200).json({status: true, data: sellers.data});
                 }else{
@@ -74,5 +77,5 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
-    }
+    },
 }
