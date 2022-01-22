@@ -32,9 +32,9 @@ class seller extends Model{
 		}
 	}
 
-	async get (ownerId){
+	async getById (id){
 		try {
-			const seller = await knex('sellers').where('active', 1).where('ownerId', ownerId).select(['id', 'name', 'phone', 'description', 'avatar']);
+			const seller = await knex('sellers').where('active', 1).where('id', id).select(['id', 'name', 'phone', 'description', 'avatar']);
 			if(seller.length > 0){
 				return {status: true, data: seller[0]};
 			}else{
@@ -45,9 +45,9 @@ class seller extends Model{
 		}
 	}
 
-	async getById (id){
+	async getByOwnerId (ownerId){
 		try {
-			const seller = await knex('sellers').where('active', 1).where('id', id).select(['id', 'name', 'phone', 'description', 'avatar']);
+			const seller = await knex('sellers').where('active', 1).where('ownerId', ownerId).select(['id', 'name', 'phone', 'description', 'avatar']);
 			if(seller.length > 0){
 				return {status: true, data: seller[0]};
 			}else{
@@ -82,7 +82,7 @@ class seller extends Model{
 		}
 	}
 	
-	async searchSellers (lim, skip, search){
+	async searchSellers (search, lim, skip){
 		try {
 			var limit = parseInt(lim);
 			var offset = parseInt(skip);
