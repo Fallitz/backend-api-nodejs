@@ -17,6 +17,9 @@ exports.up = function(knex) {
         table.string('discountend', 20).defaultTo('NULL');
         table.string('discountpercentage', 20).defaultTo('NULL');
         table.string('discountamount', 20).defaultTo('NULL');
+        table.string('unit', 20).notNullable();
+        table.string('unittype', 20).notNullable();
+        table.string('installment', 20).defaultTo('NULL');
         table.mediumtext('avatar').notNullable();
         table.float('rating');
         table.boolean('active').defaultTo('true').notNullable();
