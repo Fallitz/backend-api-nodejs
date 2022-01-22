@@ -14,7 +14,6 @@ module.exports = {
                 }else{
                     return res.status(403).json({status: false, message: userRegistered.message, field: userRegistered.field});
                 }
-             
             } catch (error) {
                 res.status(500).json({status: false, message: error.message});
             }
@@ -25,6 +24,9 @@ module.exports = {
 
     async getUser(req, res){
         const id = req.tokenData.id;
+        if (!uuidValidate(id)){
+            return res.status(403).json({status: false, message: 'ID inválido'});
+        }
         UserValidator.id.validate({id}).then(async function () {
             try {
                 const userModel = new User();
