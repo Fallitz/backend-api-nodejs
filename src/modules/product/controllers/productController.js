@@ -122,7 +122,7 @@ module.exports = {
         });
     },
 
-    async update(req, res){
+    /*async update(req, res){
         const data = req.body;
         if (!uuidValidate(data.id)){
             return res.status(403).json({status: false, message: 'ID inválido'});
@@ -142,6 +142,6 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
-    }
+    }*/
 
 }
