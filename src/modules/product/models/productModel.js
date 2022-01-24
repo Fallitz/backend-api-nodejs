@@ -115,6 +115,28 @@ class Products extends Model{
 		}
 	}
 
+	async update(id, name, description, price, sellerId){
+		try {
+			const product = await knex('products').where('id', id).select('id', 'name', 'description', 'price', 'sellerId');
+			if(product.length > 0){
+				if(product[0].sellerId == sellerId){
+					const update = await knex('products').where('id', id).update({name, description, price});
+					if(update){
+						return {status: true, message: 'Produto atualizado com sucesso'};
+					}else{
+						return {status: false, message: 'Produto não foi atualizado'};
+					}
+				}else{
+					return {status: false, message: 'Vendedor não autorizado'};
+				}
+			}else{
+				return {status: false, message: 'Produto não encontrado'};
+			}
+		}catch (error) {
+			return {status: false, message: error.sqlMessage ?? error.message};
+		}
+	}
+
 }
 
 module.exports = Products;

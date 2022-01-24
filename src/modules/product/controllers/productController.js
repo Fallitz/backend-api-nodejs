@@ -120,6 +120,28 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
+    },
+
+    async update(req, res){
+        const data = req.body;
+        if (!uuidValidate(data.id)){
+            return res.status(403).json({status: false, message: 'ID inválido'});
+        }
+        productValidator.update.validate({...data}).then(async function () {
+            try {
+                const product = new Product();
+                const productUpdated = await product.update({...data, ownerId: req.tokenData.id});
+                if(productUpdated.status){
+                    return res.status(200).json({status: true, message: 'Produto atualizado com sucesso', data: {product: productUpdated.data}});
+                }else{
+                    return res.status(403).json({status: false, message: productUpdated.message, field: productUpdated.field});
+                }
+            } catch (error) {
+                res.status(500).json({status: false, message: error.message});
+            }
+        }).catch(function (err) {
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
+        });
     }
 
 }
