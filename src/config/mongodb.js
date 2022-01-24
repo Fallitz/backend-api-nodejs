@@ -1,14 +1,7 @@
 require("dotenv").config();
-const { MongoClient } = require('mongodb');
+const { Db, MongoClient } = require('mongodb');
 const signale = require('signale');
 
-/*
-// Connection URL
-const url = process.env.MONGODB_URI;
-const client = new MongoClient(url);
-
-// Database Name
-const dbName = process.env.MONGODB_DBNAME;*/
 
 class MongoDb {
 
@@ -38,8 +31,12 @@ class MongoDb {
         }
     }
     static async getDb() {
+        let dbInstance = Db;
         if (dbInstance) {
-            return dbInstance;
+            const db = await new MongoDb().connect();
+            dbInstance = db;
+            return db;
+           // return dbInstance;
         } else {
             const db = await new MongoDb().connect();
             dbInstance = db;
@@ -68,7 +65,7 @@ main()
   .catch(console.error)
   .finally(() => client.close());
 */
-
+/*
 module.exports ={
     collections: {
         usuario: 'usuario',
@@ -84,7 +81,7 @@ module.exports ={
         analytic: 'analytic',
         visitante: 'visitante',
     },
-} 
+} */
 
 module.exports = MongoDb;
 

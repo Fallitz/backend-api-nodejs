@@ -13,6 +13,7 @@ var path = require('path');
 var rfs = require('rotating-file-stream');
 var timexe = require( 'timexe' );
 
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
@@ -27,6 +28,13 @@ app.use(morgan(':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" 
 app.use(morgan(':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" Status=:status Size=:res[content-length] Referrer=":referrer" User-Agent":user-agent" Response-Time=:response-time Token=":token"', {stream: accessLogStream}));
 
 
+//HOME PAGE
+app.use(express.static("public"));
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname+'/../public/index.html'));
+});
+
+
 //ROUTERS
 const APP_VERSION = process.env.APP_VERSION;
 app.use(`/api/${APP_VERSION}`, routes);
@@ -38,6 +46,7 @@ const server = app.listen(PORT, () => {
     signale.success(`Server Running on Port ${PORT}`);
 });
 console.log(`Server Running on Port ${PORT}`);
+
 
 //SOCKET START
 const appWebSocket = require('./socket');
