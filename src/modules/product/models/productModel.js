@@ -115,7 +115,7 @@ class Products extends Model{
 		}
 	}
 
-	/*async update(id, name, description, price, sellerId){
+	async update(id, name, description, price, sellerId){
 		try {
 			const product = await knex('products').where('id', id).select('id', 'name', 'description', 'price', 'sellerId');
 			if(product.length > 0){
@@ -135,7 +135,7 @@ class Products extends Model{
 		}catch (error) {
 			return {status: false, message: error.sqlMessage ?? error.message};
 		}
-	}*/
+	}
 
 }
 
