@@ -7,12 +7,6 @@ const schema = {
         password: Validator.string().required().min(8)
     }),
 
-    /*
-    teste:
-        Validator.object().shape({
-        fullname: Validator.string().required().min(3),
-        birth: Validator.string().required(),
-    })*/
 }
 
 
