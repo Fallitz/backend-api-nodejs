@@ -25,11 +25,10 @@ Router.use("/sellers", sellerRouters);
 Router.use("/products", productRouters);
 Router.use("/cart", cartRouters);
 //Router.use("/categories", categoryRouters);
-
-
-
-
-
+//Router.use("/orders", orderRouters);
+//Router.use("/payments", paymentRouters);
+//Router.use("/reviews", reviewRouters);
+//Router.use("/wishlists", wishlistRouters);
 
 
 module.exports = Router;
