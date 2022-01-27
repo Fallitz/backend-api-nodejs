@@ -124,7 +124,7 @@ module.exports = {
 
     async getProductByName(req, res){
         const data = req.body;
-        search.validate({...data}).then(async function () {
+        productValidator.getByName.validate({...data}).then(async function () {
             try {
                 const product = new Product();
                 const productsFound = await product.getProductByName({...data});

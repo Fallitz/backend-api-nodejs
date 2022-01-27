@@ -22,6 +22,10 @@ const schema ={
     search: Validator.object().shape({
         search: Validator.string().required().min(3)
     }),
+    getByName: Validator.object().shape({
+        name: Validator.string().required().min(3),
+        sellerId: Validator.string().required().min(36).max(36)
+    }),
 } 
 
 module.exports = schema
