@@ -122,7 +122,26 @@ module.exports = {
         });
     },
 
-    async update(req, res){
+    async getProductByName(req, res){
+        const data = req.body;
+        search.validate({...data}).then(async function () {
+            try {
+                const product = new Product();
+                const productsFound = await product.getProductByName({...data});
+                if(productsFound.status){
+                    return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
+                }else{
+                    return res.status(403).json({status: false, message: productsFound.message});
+                }
+            } catch (error) {
+                res.status(500).json({status: false, message: error.message});
+            }
+        }).catch(function (err) {
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
+        });
+    }
+
+    /*async update(req, res){
         const data = req.body;
         if (!uuidValidate(data.id)){
             return res.status(403).json({status: false, message: 'ID inválido'});
@@ -142,6 +161,6 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
-    }
+    }*/
 
 }
