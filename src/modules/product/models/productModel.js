@@ -115,6 +115,22 @@ class Products extends Model{
 		}
 	}
 
+	async getProductByName(sellerid, name){
+		try {
+			if (name == "" || name == undefined || name == null){
+				return {status: false, message: 'Nome não encontrado'};
+			}
+			const products = await knex('products').where('id', sellerid).where('name', 'like', `%${name}%`).select('id', 'name', 'description', 'price');
+			if(products.length > 0){
+				return {status: true, data: products};
+			}else{
+				return {status: false, message: 'Nenhum produto encontrado'};
+			}
+		}catch (error) {
+			return {status: false, message: error.sqlMessage ?? error.message};
+		}
+	}
+
 	async update(id, name, description, price, sellerId){
 		try {
 			const product = await knex('products').where('id', id).select('id', 'name', 'description', 'price', 'sellerId');
