@@ -25,4 +25,22 @@ module.exports = {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
+
+    async toAdd(req, res){
+        const data = req.body;
+        cartValidator.toAdd.validate({...data}).then(async function (){
+                try 
+                {
+                    const model = new Cart();
+                    const cart = await model.toAdd(data);
+                    res.json({status: true, message: 'Produto adicionado ao carrinho.', data: cart});
+                }   
+                catch (error) {
+                    res.status(500).json({status: false, message: error.message });
+                }
+        }).catch(function (err) 
+        {
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
+        });
+    },
 }
