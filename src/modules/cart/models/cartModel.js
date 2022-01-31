@@ -55,4 +55,4 @@ class Cart extends Model{
 
 }
 
-module.exports = Products;
+module.exports = Cart;
