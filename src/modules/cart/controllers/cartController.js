@@ -9,13 +9,13 @@ module.exports = {
         cartValidator.create.validate({...data}).then(async function (){
                 try 
                 {
-                   /* const modelUser = new Auth();
-                    const user = await modelUser.authenticate(data);
-                    if(user.status){
-                        res.json({status: true, message: 'Bem-vindo de volta!', data:{ accessToken: user.message.accessToken, refreshToken: user.message.refreshToken}});
+                    const cart = new Cart();
+                    const cartCreated = await cart.create({...data, ownerId: req.tokenData.id});
+                    if(cartCreated.status){
+                        return res.status(201).json({status: true, message: 'Carrinho criado com sucesso', data: {cart: cartCreated.data}});
                     }else{
-                        res.status(403).json({status: false, message: 'E-mail e/ou senha estão incorretos.'}) ;
-                    }*/
+                        return res.status(403).json({status: false, message: cartCreated.message, field: cartCreated.field});
+                    }
                 }   
                 catch (error) {
                     res.status(500).json({status: false, message: error.message });
