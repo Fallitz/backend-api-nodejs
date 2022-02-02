@@ -138,6 +138,7 @@ module.exports = {
         });
     },
     
+    //Remover update apos uso
     async update(req, res){
         const data = req.body;
         if (!uuidValidate(data.id)){

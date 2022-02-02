@@ -131,6 +131,7 @@ class Products extends Model{
 		}
 	}
 	
+	//Remover update apos uso
 	async update(id, name, description, price, sellerId){
 		try {
 			const product = await knex('products').where('id', id).select('id', 'name', 'description', 'price', 'sellerId');
