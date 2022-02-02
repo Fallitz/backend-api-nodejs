@@ -13,7 +13,7 @@ class Cart extends Model{
 				if(product.length > 0){
 					return {status: true, data: product[0]};
 				}else{
-					return {status: false, message: 'Carrinho não foi cadastrado'};
+					return {status: false, message: 'Carrinho não foi criado'};
 				}
 			}else{
 				return {status: false, message: 'Loja não cadastrada', field: 'ownerId'};
@@ -33,7 +33,7 @@ class Cart extends Model{
                     if(update){
                         return {status: true, data: product[0]};
                     }else{
-                        return {status: false, message: 'Produto não foi atualizado'};
+                        return {status: false, message: 'Produto não foi adicionado ao carrinho'};
                     }
                 }else{
                     const id = uuidv4();
@@ -41,7 +41,7 @@ class Cart extends Model{
                     if(insert){
                         return {status: true, data: product[0]};
                     }else{
-                        return {status: false, message: 'Produto não foi cadastrado'};
+                        return {status: false, message: 'Produto não foi adicionado ao carrinho'};
                     }
                 }
             }else{
@@ -55,4 +55,4 @@ class Cart extends Model{
 
 }
 
-module.exports = Products;
+module.exports = Cart;
