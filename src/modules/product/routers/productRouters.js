@@ -15,7 +15,7 @@ class userRouter {
         Router.get('/listProducts/:lim/:skip', AuthenticateToken ,ProductController.listProducts);                                              //LIST PRODUCTS
         Router.get('/searchProducts/:lim/:skip', AuthenticateToken ,ProductController.searchProduct);                                           //SEARCH PRODUCTS
         Router.get('/getProductByName/:name', AuthenticateToken ,ProductController.getProductByName);                                           //GET PRODUCT BY NAME
-
+        Router.post('/update', AuthenticateToken ,ProductController.update);                                                                    //UPDATE PRODUCT
         return Router
     }
 }

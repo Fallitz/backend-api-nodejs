@@ -130,7 +130,7 @@ class Products extends Model{
 			return {status: false, message: error.sqlMessage ?? error.message};
 		}
 	}
-	/*
+	
 	async update(id, name, description, price, sellerId){
 		try {
 			const product = await knex('products').where('id', id).select('id', 'name', 'description', 'price', 'sellerId');
@@ -151,7 +151,7 @@ class Products extends Model{
 		}catch (error) {
 			return {status: false, message: error.sqlMessage ?? error.message};
 		}
-	}*/
+	}
 
 }
 

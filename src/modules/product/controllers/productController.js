@@ -137,7 +137,7 @@ module.exports = {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
-    /*
+    
     async update(req, res){
         const data = req.body;
         if (!uuidValidate(data.id)){
@@ -158,5 +158,5 @@ module.exports = {
         }).catch(function (err) {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
-    }*/
+    }
 }
