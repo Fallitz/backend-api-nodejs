@@ -27,9 +27,6 @@ const schema ={
     id: Validator.object().shape({
         id: Validator.string().required().min(36).max(36),
     }),
-    ownerId: Validator.object().shape({
-        ownerId: Validator.string().required().min(36).max(36),
-    }),
     search: Validator.object().shape({
         search: Validator.string().required().min(3)
     }),
