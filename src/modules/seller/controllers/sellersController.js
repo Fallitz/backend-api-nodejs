@@ -45,6 +45,7 @@ module.exports = {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
         });
     },
+    
     async getSellerById(req, res){
         const id = req.body.id
         if (!uuidValidate(id)){
