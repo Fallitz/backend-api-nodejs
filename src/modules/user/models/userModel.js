@@ -14,10 +14,10 @@ class User extends Model{
             }else{
                 const id = await util.createId("idUser "+ email);
                 const password = await util.encriptPassword(data.password);
-                const user = await knex('users').insert({...data, id, email, password}).then(() => {return knex ('users').where('email', email).select('id', 'email')});
+                const user = await knex('users').insert({...data, id, email, password, "role":"user"}).then(() => {return knex ('users').where('email', email).select('id', 'email', 'role')});
                 if(user.length > 0){
                     const code = uuidv4();
-                    const userId = {id: user[0].id, code: code};
+                    const userId = {id: user[0].id, code: code, role: user[0].role};
                     const acessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRES_IN ?? '15m');
                     const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_EXPIRES_IN ?? '7d');
                     

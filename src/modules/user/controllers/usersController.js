@@ -1,3 +1,4 @@
+const authenticateRoles = require('../../../middleware/authenticateRoles');
 const UserValidator = require('../../../repositories/http/validators/user');
 const User = require('../models/userModel');
 const { validate: uuidValidate } = require('uuid');
@@ -24,25 +25,30 @@ module.exports = {
     },
 
     async getUser(req, res){
-        const id = req.tokenData.id;
-        if (!uuidValidate(id)){
-            return res.status(403).json({status: false, message: 'ID inválido'});
+        const roles = await authenticateRoles( req.tokenData.role, ['user']);
+        if(roles){
+            const id = req.tokenData.id;
+            if (!uuidValidate(id)){
+                return res.status(403).json({status: false, message: 'ID inválido'});
+            }
+            UserValidator.id.validate({id}).then(async function () {
+                try {
+                    const userModel = new User();
+                    const user = await userModel.getUser(id);
+                    if(user.status){
+                        return res.status('200').json({status: true, data: user.message});
+                    }else{
+                        return res.status('403').json({status: false, message: user.message});
+                    }
+                } catch (error) {
+                    throw error;
+                }   
+            }).catch(function (err) {
+                res.status(500).json({status: false, message: err.errors[0], field: err.path});
+            });
+        }else{
+            return res.status(403).json({status: false, message: 'Acesso negado'});
         }
-        UserValidator.id.validate({id}).then(async function () {
-            try {
-                const userModel = new User();
-                const user = await userModel.getUser(id);
-                if(user.status){
-                    return res.status('200').json({status: true, data: user.message});
-                }else{
-                    return res.status('403').json({status: false, message: user.message});
-                }
-            } catch (error) {
-                throw error;
-            }   
-        }).catch(function (err) {
-            res.status(500).json({status: false, message: err.errors[0], field: err.path});
-        });
     },
     
     /*

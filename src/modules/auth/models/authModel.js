@@ -7,13 +7,13 @@ class Auth extends Model{
 
     async authenticate({email, password}){
         try{
-            const dbemail = await knex('users').where("email", email.toLowerCase()).select('id', 'password', 'active');
+            const dbemail = await knex('users').where("email", email.toLowerCase()).select('id', 'password', 'active', 'role');
             if (dbemail.length > 0 && dbemail[0].active == 1) {
                 const dbpassword = dbemail[0].password;
                 const comparePassword = await util.comparePassword(password, dbpassword);
                 if(comparePassword === true){   
                     const idToken = uuidv4();
-                    const userId = {id: dbemail[0].id, code: idToken};
+                    const userId = {id: dbemail[0].id, code: idToken, role: dbemail[0].role};
                     const accessToken = await util.generateToken(userId, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_EXPIRES_IN ?? '15m');
                     const refreshToken = await util.generateToken(userId, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_EXPIRES_IN ?? '7d');         
                     return ({status: true, message: {id: dbemail[0].id, accessToken: accessToken, refreshToken: refreshToken}});
