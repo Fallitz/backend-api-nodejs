@@ -1,6 +1,7 @@
 const { search } = require('../../../repositories/http/validators/product');
 const productValidator = require('../../../repositories/http/validators/product');
 const Product = require('../models/productModel');
+const { validate: uuidValidate } = require('uuid');
 
 module.exports = {
 
