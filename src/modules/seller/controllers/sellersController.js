@@ -25,14 +25,35 @@ module.exports = {
     },
 
     async getSeller(req, res){
-        const data = req.body.ownerId ?? req.tokenData.id;
+        const id = req.tokenData.id;
         if (!uuidValidate(id)){
             return res.status(403).json({status: false, message: 'ID inválido'});
         }
-        sellerValidator.ownerId.validate({...data}).then(async function () {
+        sellerValidator.id.validate({id}).then(async function () {
             try {
                 const seller = new Seller();
-                const sellerFound = req.params.id ? await seller.getById(data.id) : await seller.getByOwnerId(data.ownerId);
+                const sellerFound = await seller.getByOwnerId(id);
+                if(sellerFound.status){
+                    return res.status(200).json({status: true, data: sellerFound.data});
+                }else{
+                    return res.status(403).json({status: false, message: sellerFound.message});
+                }             
+            } catch (error) {
+                res.status(500).json({status: false, message: error.message});
+            }
+        }).catch(function (err) {
+            res.status(500).json({status: false, message: err.errors[0], field: err.path});
+        });
+    },
+    async getSellerById(req, res){
+        const id = req.body.id
+        if (!uuidValidate(id)){
+            return res.status(403).json({status: false, message: 'ID inválido'});
+        }
+        sellerValidator.id.validate({id}).then(async function () {
+            try {
+                const seller = new Seller();
+                const sellerFound = await seller.getById(id)
                 if(sellerFound.status){
                     return res.status(200).json({status: true, data: sellerFound.data});
                 }else{
