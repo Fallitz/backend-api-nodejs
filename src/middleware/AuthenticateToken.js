@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
     return res.status(401).json({ auth: false, message: 'Falha ao autenticar token.' });
   }
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, function(err, token){
-    if (err) {return res.status(500).json({ auth: false, message: 'Falha ao autenticar token.' });}
+    if (err) {return res.status(401).json({ auth: false, message: 'Falha ao autenticar token.' });}
     req.tokenData = token;
     next()
   });
