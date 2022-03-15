@@ -9,6 +9,7 @@
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js",
     "test": "jest",
+    "test:watch": "npm run test -- --watch",
     "migrate": "npx knex migrate:latest",
     "unmigrate": "npx knex migrate:rollback",
     "seed": "npx knex seed:run "
