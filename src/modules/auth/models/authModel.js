@@ -5,6 +5,11 @@ const { v4: uuidv4 } = require('uuid');
 
 class Auth extends Model{
 
+    constructor(db) {
+        super();
+        this.collection = db.collection('auth');
+    }
+
     async authenticate({email, password}){
         try{
             const dbemail = await knex('users').where("email", email.toLowerCase()).select('id', 'password', 'active', 'role');

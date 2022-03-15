@@ -1,87 +1,36 @@
 require("dotenv").config();
-const { Db, MongoClient } = require('mongodb');
+const { MongoClient } = require('mongodb');
 const signale = require('signale');
 
+const auth = require('../modules/auth/models/authModel');
+const user = require('../modules/user/models/userModel');
+const seller = require('../modules/seller/models/sellerModel');
+const cart = require('../modules/cart/models/cartModel');
+const product = require('../modules/product/models/productModel');
 
-class MongoDb {
+class MongoBot {
 
-    constructor() { }
-
-    async connect() {
-        try {
-            
-            signale.info('conectando ao MongoDb...');
-            const mongodbUrl = process.env.MONGODB_URI || 'ENV VAR MONGODB_URL IS NOT DEFINED';
-            signale.info('MONGODB_URL: ' + mongodbUrl);
-    
-            const mongoClient = await MongoClient.connect(mongodbUrl, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            });
-    
-            signale.info(`MONGODB_DATABASE ${process.env.MONGODB_URI || 'UNDEFINED'}`)
-            const Db = mongoClient.db(process.env.MONGODB_URI)
-    
-            signale.info('conectado ao mongoDb');
-    
-            return Db;
-
-        } catch (err) {
-            console.log(err.stack);
-        }
+  constructor() {
+        this.client = new MongoClient(process.env.MONGODB_URI , {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
     }
-    static async getDb() {
-        let dbInstance = Db;
-        if (dbInstance) {
-            const db = await new MongoDb().connect();
-            dbInstance = db;
-            return db;
-           // return dbInstance;
-        } else {
-            const db = await new MongoDb().connect();
-            dbInstance = db;
-            return db;
-        }
+    async init() {
+        signale.info('Conectando ao MongoDb...');
+    
+        await this.client.connect();
+        this.db = this.client.db(process.env.MONGODB_DBNAME);
+
+        this.Auth = new auth(this.db);
+        this.User = new user(this.db);
+        this.Seller = new seller(this.db);
+        this.Cart = new cart(this.db);
+        this.Product = new product(this.db)
+        
+        signale.success('Conectado ao MongoDb');
     }
+
 }
 
-/**
-
-async function main(collection) {
-  // Use connect method to connect to the server
-  await client.connect();
-  console.log('Connected successfully to server');
-  const db = client.db(dbName);
-
-  const collection = db.collection(collection);
-
-  // the following code examples can be pasted here...
-
-  return 'done.';
-}
-
-main()
-  .then(console.log)
-  .catch(console.error)
-  .finally(() => client.close());
-*/
-/*
-module.exports ={
-    collections: {
-        usuario: 'usuario',
-        place: 'place',
-        municipio: 'municipio',
-        produto: 'produto',
-        funcionario: 'funcionario',
-        analytics: 'analytics',
-        carrinho: 'carrinho',
-        pedido: 'pedido',
-        produtoCategoria: 'produtoCategoria',
-        banner: 'banner',
-        analytic: 'analytic',
-        visitante: 'visitante',
-    },
-} */
-
-module.exports = MongoDb;
-
+module.exports = new MongoBot();

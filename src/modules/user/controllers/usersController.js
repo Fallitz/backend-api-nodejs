@@ -2,6 +2,7 @@ const authenticateRoles = require('../../../middleware/authenticateRoles');
 const UserValidator = require('../../../repositories/http/validators/user');
 const User = require('../models/userModel');
 const { validate: uuidValidate } = require('uuid');
+var mongodb = require('../../../config/mongodb');
 
 module.exports = {
 
@@ -9,7 +10,7 @@ module.exports = {
         const data = req.body;
         UserValidator.create.validate({...data}).then(async function () {
             try {
-                const user = new User();
+                const user = mongodb.User;
                 const userRegistered = await user.create(data);
                 if(userRegistered.status){
                     return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});
@@ -33,7 +34,7 @@ module.exports = {
             }
             UserValidator.id.validate({id}).then(async function () {
                 try {
-                    const userModel = new User();
+                    const userModel = mongodb.User;
                     const user = await userModel.getUser(id);
                     if(user.status){
                         return res.status('200').json({status: true, data: user.message});
@@ -54,7 +55,7 @@ module.exports = {
     /*
     async update(req, res){
         try {
-            const userModel = new User();
+            const userModel =  mongodb.User;
             const user_id = req.params.id;
             const {email, fullname, birth, nickname} = req.body;
 
@@ -72,7 +73,7 @@ module.exports = {
             // Cheks if the user logged is admin or if the user id that will be deleted is equal to logged
             if(getType == 'admin' || userAuthenticated == user_id){
                 try {
-                    const userModel = new User();
+                    const userModel =  mongodb.User;
                     await userModel.update({id: user_id}, {fullname, birth});
                     return res.status(200).json({message: "User Updated", data: {user: user_id}});
                 } catch (error) {
@@ -90,7 +91,7 @@ module.exports = {
   
     async delete(req, res){
         try {
-            const userModel = new User();
+            const userModel = mongodb.User;
             const {user_id} = req.body;
 
             //Get user logged id e select your type (user, admin ...)
@@ -100,7 +101,7 @@ module.exports = {
             // Cheks if the user logged is admin or if the user id that will be deleted is equal to logged
             if(getType == 'admin' || userAuthenticated == user_id){
                 try {
-                    const userModel = new User();
+                    const userModel =  mongodb.User;
                     await userModel.delete(user_id);
                     return res.status(200).json({message: "User deleted", data: {user_id}});
                 } catch (error) {
@@ -120,7 +121,7 @@ module.exports = {
 /*
 async function updateUserEmail(user_id, email, res){
     //check if email has been registered
-    const userModel = new User();
+    const userModel =  mongodb.User;
     const emailRegistred =  await userModel.where({email}, ['email']);
     if(emailRegistred.length >= 1){
         return res.status(500).json({message: 'E-mail já registrado'});
@@ -132,7 +133,7 @@ async function updateUserEmail(user_id, email, res){
 
 async function updateUserNickname(user_id, nickname, res){
     //check if nickname has been registered
-    const userModel = new User();
+    const userModel = mongodb.User;
     const nicknameRegistered =  await userModel.where({nickname}, ['nickname']);
     if(nicknameRegistered.length >= 1){
         return res.status(500).json({message: 'Nickname já registrado'});
