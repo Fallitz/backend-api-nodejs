@@ -1,18 +1,24 @@
 require("dotenv").config();
+
 const express = require('express');
 const app = express();
+const appWebSocket = require('./socket');
+const routes = require('./routes');
+
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const fs = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
-const signale = require('signale');
-const routes = require('./routes');
+
 const knex = require('./config/database');
-const mongo = require('./config/mongodb');
-var path = require('path');
-var rfs = require('rotating-file-stream');
-var timexe = require( 'timexe' );
+const mongoDb = require('./config/mongodb');
+const modules = require('./config/modules');
+
+const path = require('path');
+const rfs = require('rotating-file-stream');
+const signale = require('signale');
+const timexe = require( 'timexe' );
+
 
 async function start() {
     
@@ -30,6 +36,11 @@ async function start() {
     app.use(morgan(':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" Status=:status Size=:res[content-length] Referrer=":referrer" User-Agent":user-agent" Response-Time=:response-time Token=":token"', {stream: accessLogStream}));
 
 
+    //DATABASE AND MODULES INIT
+    await mongoDb.init();
+    await modules.initModules(mongoDb.db);
+
+
     //HOME PAGE
     app.use(express.static("public"));
     app.get("/", function(req, res) {
@@ -42,10 +53,6 @@ async function start() {
     app.use(`/api/${APP_VERSION}`, routes);
 
 
-    //DATABASE INIT
-    await mongo.init();
-
-
     //SERVER LISTEN
     const PORT = process.env.APP_PORT;
     const server = app.listen(PORT, () => {
@@ -54,7 +61,6 @@ async function start() {
 
 
     //SOCKET START
-    const appWebSocket = require('./socket');
     appWebSocket(server);
 
 
