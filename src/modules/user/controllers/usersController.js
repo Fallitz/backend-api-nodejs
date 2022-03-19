@@ -1,5 +1,5 @@
 const UserValidator = require('../../../repositories/http/validators/user');
-var mongodb = require('../../../config/mongodb');
+var model = require('../../../config/modules');
 const { validate: uuidValidate } = require('uuid');
 const authenticateRoles = require('../../../middleware/authenticateRoles');
 
@@ -9,8 +9,8 @@ module.exports = {
         const data = req.body;
         UserValidator.create.validate({...data}).then(async function () {
             try {
-                const user = mongodb.User;
-                const userRegistered = await user.create(data);
+                const userModel = await model.User;
+                const userRegistered = await userModel.create(data);
                 if(userRegistered.status){
                     return res.status(201).json({status: true, message: 'Usuário criado com sucesso', data: {user: userRegistered.user, acessToken: userRegistered.acessToken, refreshToken: userRegistered.refreshToken}});
                 }else{
@@ -33,7 +33,7 @@ module.exports = {
             }
             UserValidator.id.validate({id}).then(async function () {
                 try {
-                    const userModel = mongodb.User;
+                    const userModel = await model.User;
                     const user = await userModel.getUser(id);
                     if(user.status){
                         return res.status('200').json({status: true, data: user.message});
@@ -54,7 +54,7 @@ module.exports = {
     /*
     async update(req, res){
         try {
-            const userModel =  mongodb.User;
+             const userModel = await model.User;
             const user_id = req.params.id;
             const {email, fullname, birth, nickname} = req.body;
 
@@ -90,7 +90,7 @@ module.exports = {
   
     async delete(req, res){
         try {
-            const userModel = mongodb.User;
+            const userModel = await model.User;
             const {user_id} = req.body;
 
             //Get user logged id e select your type (user, admin ...)
@@ -120,7 +120,7 @@ module.exports = {
 /*
 async function updateUserEmail(user_id, email, res){
     //check if email has been registered
-    const userModel =  mongodb.User;
+        const userModel = await model.User;
     const emailRegistred =  await userModel.where({email}, ['email']);
     if(emailRegistred.length >= 1){
         return res.status(500).json({message: 'E-mail já registrado'});
@@ -132,7 +132,7 @@ async function updateUserEmail(user_id, email, res){
 
 async function updateUserNickname(user_id, nickname, res){
     //check if nickname has been registered
-    const userModel = mongodb.User;
+        const userModel = await model.User;
     const nicknameRegistered =  await userModel.where({nickname}, ['nickname']);
     if(nicknameRegistered.length >= 1){
         return res.status(500).json({message: 'Nickname já registrado'});
