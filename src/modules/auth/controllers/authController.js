@@ -10,8 +10,8 @@ module.exports = {
         AuthValidator.auth.validate({...data}).then(async function (){
                 try 
                 {
-                    const modelUser = mongodb.Auth;
-                    const user = await modelUser.authenticate(data);
+                    const authModel = mongodb.Auth;
+                    const user = await authModel.authenticate(data);
                     if(user.status){
                         res.json({status: true, message: 'Bem-vindo de volta!', data:{ accessToken: user.message.accessToken, refreshToken: user.message.refreshToken}});
                     }else{
@@ -29,9 +29,9 @@ module.exports = {
 
     async logout(req, res){
         try{
-            const modelUser = mongodb.Auth;
+            const authModel = mongodb.Auth;
             const token = req.headers['access-token'];
-            const result = await modelUser.logout(token);
+            const result = await authModel.logout(token);
             if (result.status){
                 res.status(200).json({ auth: false, accessToken: null });
             }else{
@@ -47,9 +47,9 @@ module.exports = {
             const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
             if(tokenRefreshVerified){
                 if (tokenRefreshVerified.code == req.tokenData.code){
-                    const modelUser = mongodb.Auth;
+                    const authModel = mongodb.Auth;
                     const tokenForLogout = req.headers['access-token'];
-                    const result = await modelUser.refreshToken(req.tokenData.id, tokenForLogout);
+                    const result = await authModel.refreshToken(req.tokenData.id, tokenForLogout);
                     if (result.status){
                         res.status(200).json({ accessToken: result.data.accessToken, refreshToken: result.data.refreshToken });
                     }

@@ -8,8 +8,8 @@ module.exports = {
         const data = req.body;
         productValidator.create.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const productRegistered = await product.create({...data, ownerId: req.tokenData.id});
+                const productModel = mongodb.Product;
+                const productRegistered = await productModel.create({...data, ownerId: req.tokenData.id});
                 if(productRegistered.status){
                     return res.status(201).json({status: true, message: 'Produto criado com sucesso', data: {store: productRegistered.data}});
                 }else{
@@ -30,8 +30,8 @@ module.exports = {
         }
         productValidator.id.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const productFound = await product.getById(data.id);
+                const productModel = mongodb.Product;
+                const productFound = await productModel.getById(data.id);
                 if(productFound.status){
                     return res.status(200).json({status: true, message: 'Produto encontrado', data: {product: productFound.data}});
                 }else{
@@ -52,8 +52,8 @@ module.exports = {
         }
         productValidator.sellerId.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const products = await product.getBySellerId(data.sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
+                const productModel = mongodb.Product;
+                const products = await productModel.getBySellerId(data.sellerId, req.params.lim ?? 10, req.params.skip ?? 0);
                 if(products.status){
                     return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: products.data, pagination: products.pagination}});
                 }else{
@@ -71,8 +71,8 @@ module.exports = {
         const data = req.body;
         productValidator.categoriaId.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const productsFound = await product.getByCategoryId(data.categoryId, req.params.lim ?? 10, req.params.skip ?? 0);
+                const productModel = mongodb.Product;
+                const productsFound = await productModel.getByCategoryId(data.categoryId, req.params.lim ?? 10, req.params.skip ?? 0);
                 if(productsFound.status){
                     return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
                 }else{
@@ -88,8 +88,8 @@ module.exports = {
 
     async listProducts(req, res){
         try {
-            const product = new Product();
-            const products = await product.listProducts(req.params.lim ?? 10, req.params.skip ?? 0);
+            const productModel = mongodb.Product;
+            const products = await productModel.listProducts(req.params.lim ?? 10, req.params.skip ?? 0);
             if(products.status){
                 return res.status(200).json({status: true, data: products.data, pagination: products.pagination});
             }else{
@@ -104,8 +104,8 @@ module.exports = {
         const data = req.body;
         productValidator.search.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const productsFound = await product.searchProduct({...data, ownerId: req.tokenData.id});
+                const productModel = mongodb.Product;
+                const productsFound = await productModel.searchProduct({...data, ownerId: req.tokenData.id});
                 if(productsFound.status){
                     return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
                 }else{
@@ -123,8 +123,8 @@ module.exports = {
         const data = req.body;
         productValidator.getByName.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const productsFound = await product.getProductByName({...data});
+                const productModel = mongodb.Product;
+                const productsFound = await productModel.getProductByName({...data});
                 if(productsFound.status){
                     return res.status(200).json({status: true, message: 'Produtos encontrados', data: {products: productsFound.data}});
                 }else{
@@ -146,8 +146,8 @@ module.exports = {
         }
         productValidator.update.validate({...data}).then(async function () {
             try {
-                const product = new Product();
-                const productUpdated = await product.update(data);
+                const productModel = mongodb.Product;
+                const productUpdated = await productModel.update(data);
                 if(productUpdated.status){
                     return res.status(200).json({status: true, message: 'Produto atualizado', data: {product: productUpdated.data}});
                 }else{

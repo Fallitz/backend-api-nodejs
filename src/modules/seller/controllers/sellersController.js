@@ -9,8 +9,8 @@ module.exports = {
         const data = req.body;
         sellerValidator.create.validate({...data}).then(async function () {
             try {
-                const seller = new Seller();
-                const sellerRegistered = await seller.create({...data, ownerId: req.tokenData.id});
+                const sellerModel = mongodb.Seller;
+                const sellerRegistered = await sellerModel.create({...data, ownerId: req.tokenData.id});
                 if(sellerRegistered.status){
                     return res.status(201).json({status: true, message: 'Loja criada com sucesso', data: {store: sellerRegistered.data}});
                 }else{
@@ -31,8 +31,8 @@ module.exports = {
         }
         sellerValidator.id.validate({id}).then(async function () {
             try {
-                const seller = new Seller();
-                const sellerFound = await seller.getByOwnerId(id);
+                const sellerModel = mongodb.Seller;
+                const sellerFound = await sellerModel.getByOwnerId(id);
                 if(sellerFound.status){
                     return res.status(200).json({status: true, data: sellerFound.data});
                 }else{
@@ -53,8 +53,8 @@ module.exports = {
         }
         sellerValidator.id.validate({id}).then(async function () {
             try {
-                const seller = new Seller();
-                const sellerFound = await seller.getById(id)
+                const sellerModel = mongodb.Seller;
+                const sellerFound = await sellerModel.getById(id)
                 if(sellerFound.status){
                     return res.status(200).json({status: true, data: sellerFound.data});
                 }else{
@@ -70,8 +70,8 @@ module.exports = {
 
     async listSellers(req, res){
         try {
-            const seller = new Seller();
-            const sellers = await seller.listSellers(req.params.lim ?? 10, req.params.skip ?? 0);
+            const sellerModel = mongodb.Seller;
+            const sellers = await sellerModel.listSellers(req.params.lim ?? 10, req.params.skip ?? 0);
             if(sellers.status){
                 return res.status(200).json({status: true, data: sellers.data, pagination: sellers.pagination});
             }else{
@@ -86,8 +86,8 @@ module.exports = {
         const data = req.body;
         sellerValidator.search.validate({...data}).then(async function () {
             try {
-                const seller = new Seller();
-                const sellers = await seller.searchSellers(data.search, req.query.limit ?? 10, req.query.offset ?? 0);
+                const sellerModel = mongodb.Seller;
+                const sellers = await sellerModel.searchSellers(data.search, req.query.limit ?? 10, req.query.offset ?? 0);
                 if(sellers.status){
                     return res.status(200).json({status: true, data: sellers.data});
                 }else{

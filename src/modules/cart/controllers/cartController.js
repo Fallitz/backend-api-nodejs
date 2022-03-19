@@ -9,8 +9,8 @@ module.exports = {
         cartValidator.create.validate({...data}).then(async function (){
                 try 
                 {
-                    const cart = new Cart();
-                    const cartCreated = await cart.create({...data, ownerId: req.tokenData.id});
+                    const cartModel = mongodb.Cart;
+                    const cartCreated = await cartModel.create({...data, ownerId: req.tokenData.id});
                     if(cartCreated.status){
                         return res.status(201).json({status: true, message: 'Carrinho criado com sucesso', data: {cart: cartCreated.data}});
                     }else{
@@ -31,8 +31,8 @@ module.exports = {
         cartValidator.toAdd.validate({...data}).then(async function (){
                 try 
                 {
-                    const model = new Cart();
-                    const cart = await model.toAdd(data);
+                    const cartModel = mongodb.Cart;
+                    const cart = await cartModel.toAdd(data);
                     res.json({status: true, message: 'Produto adicionado ao carrinho.', data: cart});
                 }   
                 catch (error) {
