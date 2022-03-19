@@ -1,8 +1,7 @@
-const authenticateRoles = require('../../../middleware/authenticateRoles');
 const UserValidator = require('../../../repositories/http/validators/user');
-const User = require('../models/userModel');
-const { validate: uuidValidate } = require('uuid');
 var mongodb = require('../../../config/mongodb');
+const { validate: uuidValidate } = require('uuid');
+const authenticateRoles = require('../../../middleware/authenticateRoles');
 
 module.exports = {
 

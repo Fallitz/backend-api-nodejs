@@ -1,6 +1,6 @@
 const cartValidator = require('../../../repositories/http/validators/cart');
-const Cart = require('../models/cartModel');
-const util = require('../../../repositories/util/util');
+var mongodb = require('../../../config/mongodb');
+//const util = require('../../../repositories/util/util');
 
 module.exports = {
     

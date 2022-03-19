@@ -1,8 +1,7 @@
 const AuthValidator = require('../../../repositories/http/validators/auth');
-const Auth = require('../models/authModel');
-const util = require('../../../repositories/util/util');
-const Mail = require('../../../services/mail');
 var mongodb = require('../../../config/mongodb');
+const util = require('../../../repositories/util/util');
+//const Mail = require('../../../services/mail');
 
 module.exports = {
     

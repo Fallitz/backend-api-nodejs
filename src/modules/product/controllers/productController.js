@@ -1,6 +1,5 @@
-const { search } = require('../../../repositories/http/validators/product');
 const productValidator = require('../../../repositories/http/validators/product');
-const Product = require('../models/productModel');
+var mongodb = require('../../../config/mongodb');
 const { validate: uuidValidate } = require('uuid');
 
 module.exports = {
@@ -103,7 +102,7 @@ module.exports = {
 
     async searchProduct(req, res){
         const data = req.body;
-        search.validate({...data}).then(async function () {
+        productValidator.search.validate({...data}).then(async function () {
             try {
                 const product = new Product();
                 const productsFound = await product.searchProduct({...data, ownerId: req.tokenData.id});
