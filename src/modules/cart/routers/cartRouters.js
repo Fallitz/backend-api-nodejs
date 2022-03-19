@@ -11,7 +11,7 @@ class userRouter {
         Router.post('/create', AuthenticateToken ,CartController.create);                                                                    //CREATE CART
         Router.post('/toAdd', AuthenticateToken ,CartController.toAdd);                                                                      //ADD PRODUCT TO CART
 
-        return Router
+        return Router;
     }
 }
 

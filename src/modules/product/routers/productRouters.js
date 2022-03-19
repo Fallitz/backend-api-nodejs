@@ -19,7 +19,7 @@ class userRouter {
         //Remover update apos uso
         Router.post('/update', AuthenticateToken ,ProductController.update);                                                                    //UPDATE PRODUCT
         
-        return Router
+        return Router;
     }
 }
 

@@ -13,7 +13,7 @@ class userRouter {
         //Router.put('/users/update/:id', AuthenticateToken, UsersController.update);                                   //UPDATE USER
         //Router.delete('/users/delete', AuthenticateToken, UsersController.delete);                                    //DELETE USER
                     
-        return Router
+        return Router;
     }
 }
 

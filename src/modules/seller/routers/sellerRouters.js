@@ -14,7 +14,7 @@ class sellerRouter {
         Router.get('/listSellers/:lim/:skip', AuthenticateToken, SellersController.listSellers);                 //LIST SELLERS
         Router.get('/searchSellers/:lim/:skip', AuthenticateToken, SellersController.searchSellers);             //SEARCH SELLERS
             
-        return Router
+        return Router;
     }
 }
 

@@ -14,7 +14,7 @@ class authRouter {
         //Router.post('/auth/forgot' , AuthController.forgot);                                                      //FORGOT PASSWORD
         //Router.get('/auth/forgot' , AuthController.alterPassword);  
     
-        return Router
+        return Router;
     }
 }
 

@@ -26,7 +26,7 @@ class MongoBot {
         this.User = new user(this.db);
         this.Seller = new seller(this.db);
         this.Cart = new cart(this.db);
-        this.Product = new product(this.db)
+        this.Product = new product(this.db);
         
         signale.success('Conectado ao MongoDb');
     }
