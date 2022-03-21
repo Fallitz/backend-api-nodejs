@@ -20,7 +20,7 @@ class User extends Model{
                 const id = await util.createId("idUser "+ email);
                 const password = await util.encriptPassword(data.password);
                 const user = await knex('users').insert({...data, id, email, password, "role":"user"}).then(() => {return knex ('users').where('email', email).select('id', 'email', 'role')});
-                const userBck = await this.collection.insertOne({...data, id, email, password, "role":"user"}); //ADD IN MONGODB
+                //const userBck = await this.collection.insertOne({...data, id, email, password, "role":"user"}); //ADD IN MONGODB
                 if(user.length > 0){
                     const code = uuidv4();
                     const userId = {id: user[0].id, code: code, role: user[0].role};

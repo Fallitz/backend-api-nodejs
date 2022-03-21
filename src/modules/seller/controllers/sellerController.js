@@ -1,7 +1,7 @@
 const sellerValidator = require('../../../repositories/http/validators/seller');
 var model = require('../../../config/modules');
 const { validate: uuidValidate } = require('uuid');
-const { get } = require('timexe');
+const authenticateRoles = require('../../../middleware/authenticateRoles');
 
 module.exports = {
 

@@ -1,4 +1,4 @@
-const UserValidator = require('../../../repositories/http/validators/user');
+const UserValidator = require('./validators/userValidator');
 var model = require('../../../config/modules');
 const { validate: uuidValidate } = require('uuid');
 const authenticateRoles = require('../../../middleware/authenticateRoles');
@@ -25,7 +25,7 @@ module.exports = {
     },
 
     async getUser(req, res){
-        const roles = await authenticateRoles( req.tokenData.role, ['user']);
+        const roles = await authenticateRoles( req.tokenData.role, ['user', 'admin']);
         if(roles){
             const id = req.tokenData.id;
             if (!uuidValidate(id)){

@@ -1,7 +1,7 @@
 const express = require('express');
 
 const AuthenticateToken = require('../../../middleware/authenticateToken');
-const UsersController = require('../controllers/usersController');
+const UsersController = require('../controllers/userController');
 
 class userRouter {
     static getRouter() {

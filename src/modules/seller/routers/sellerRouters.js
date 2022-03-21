@@ -1,7 +1,7 @@
 const express = require('express');
 
 const AuthenticateToken = require('../../../middleware/authenticateToken');
-const SellersController = require('../controllers/sellersController');
+const SellersController = require('../controllers/sellerController');
 
 class sellerRouter {
     static getRouter() {
