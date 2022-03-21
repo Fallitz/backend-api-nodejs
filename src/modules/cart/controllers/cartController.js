@@ -1,5 +1,5 @@
 const cartValidator = require('../../../repositories/http/validators/cart');
-var mongodb = require('../../../config/mongodb');
+var model = require('../../../config/modules');
 //const util = require('../../../repositories/util/util');
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         cartValidator.create.validate({...data}).then(async function (){
                 try 
                 {
-                    const cartModel = mongodb.Cart;
+                    const cartModel = await model.Cart;
                     const cartCreated = await cartModel.create({...data, ownerId: req.tokenData.id});
                     if(cartCreated.status){
                         return res.status(201).json({status: true, message: 'Carrinho criado com sucesso', data: {cart: cartCreated.data}});
@@ -31,7 +31,7 @@ module.exports = {
         cartValidator.toAdd.validate({...data}).then(async function (){
                 try 
                 {
-                    const cartModel = mongodb.Cart;
+                    const cartModel = await model.Cart;
                     const cart = await cartModel.toAdd(data);
                     res.json({status: true, message: 'Produto adicionado ao carrinho.', data: cart});
                 }   

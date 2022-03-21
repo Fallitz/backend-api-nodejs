@@ -1,5 +1,5 @@
 const AuthValidator = require('../../../repositories/http/validators/auth');
-var mongodb = require('../../../config/mongodb');
+var model = require('../../../config/modules');
 const util = require('../../../repositories/util/util');
 //const Mail = require('../../../services/mail');
 
@@ -10,7 +10,7 @@ module.exports = {
         AuthValidator.auth.validate({...data}).then(async function (){
                 try 
                 {
-                    const authModel = mongodb.Auth;
+                    const authModel = await model.Auth;
                     const user = await authModel.authenticate(data);
                     if(user.status){
                         res.json({status: true, message: 'Bem-vindo de volta!', data:{ accessToken: user.message.accessToken, refreshToken: user.message.refreshToken}});
@@ -29,7 +29,7 @@ module.exports = {
 
     async logout(req, res){
         try{
-            const authModel = mongodb.Auth;
+            const authModel = await model.Auth;
             const token = req.headers['access-token'];
             const result = await authModel.logout(token);
             if (result.status){
@@ -47,7 +47,7 @@ module.exports = {
             const tokenRefreshVerified = await util.verifyToken(req.body.refreshToken, process.env.REFRESH_TOKEN_SECRET);
             if(tokenRefreshVerified){
                 if (tokenRefreshVerified.code == req.tokenData.code){
-                    const authModel = mongodb.Auth;
+                    const authModel = await model.Auth;
                     const tokenForLogout = req.headers['access-token'];
                     const result = await authModel.refreshToken(req.tokenData.id, tokenForLogout);
                     if (result.status){
