@@ -1,4 +1,4 @@
-const cartValidator = require('../../../repositories/http/validators/cart');
+const cartValidator = require('./validators/cartValidator');
 var model = require('../../../config/modules');
 //const util = require('../../../repositories/util/util');
 

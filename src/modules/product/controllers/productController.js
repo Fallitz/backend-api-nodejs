@@ -1,4 +1,4 @@
-const productValidator = require('../../../repositories/http/validators/product');
+const productValidator = require('./validators/productValidator');
 var model = require('../../../config/modules');
 const { validate: uuidValidate } = require('uuid');
 

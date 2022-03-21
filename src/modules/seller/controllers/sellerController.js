@@ -1,4 +1,4 @@
-const sellerValidator = require('../../../repositories/http/validators/seller');
+const sellerValidator = require('./validators/sellerValidator');
 var model = require('../../../config/modules');
 const { validate: uuidValidate } = require('uuid');
 const authenticateRoles = require('../../../middleware/authenticateRoles');

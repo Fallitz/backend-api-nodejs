@@ -1,4 +1,4 @@
-const Validator = require('../Validator')
+const Validator = require('../../../../repositories/http/Validator')
 
 const schema ={
     create: Validator.object().shape({
