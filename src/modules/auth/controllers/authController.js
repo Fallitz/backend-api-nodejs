@@ -1,12 +1,15 @@
 const AuthValidator = require('./validators/authValidator');
 var model = require('../../../config/modules');
 const util = require('../../../repositories/util/util');
-//const Mail = require('../../../services/mail');
+const Mail = require('../../../repositories/services/mail');
 
 module.exports = {
     
     async auth(req, res){
-        const data = req.body;
+        const mail = new Mail("SMS <fallitzdev@gmail.com>", "edenilson.sza@gmail.com","Email de teste", `Olá Edenilson, você acabou de se cadastrar no sistema.`);
+        await mail.send();
+       /*  const data = req.body;
+        
         AuthValidator.auth.validate({...data}).then(async function (){
                 try 
                 {
@@ -24,7 +27,7 @@ module.exports = {
         }).catch(function (err) 
         {
             res.status(500).json({status: false, message: err.errors[0], field: err.path});
-        });
+        }); */
     },
 
     async logout(req, res){

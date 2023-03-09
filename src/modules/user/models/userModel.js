@@ -5,10 +5,10 @@ const { v4: uuidv4 } = require('uuid');
 
 class User extends Model{
     
-    constructor(db) {
+   /*  constructor(db) {
         super();
         this.collection = db.collection('users');
-    }
+    } */
 
     async create(data){
         try {

@@ -5,10 +5,10 @@ const { v4: uuidv4 } = require('uuid');
 
 class Auth extends Model{
 
-    constructor(db) {
+    /* constructor(db) {
         super();
         this.collection = db.collection('auth');
-    }
+    } */
 
     async authenticate({email, password}){
         try{
